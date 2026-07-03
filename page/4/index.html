@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vagrantの日常笔记</title><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="欲速则不达">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vagrantの日常笔记">
+<meta property="og:url" content="https://vagrantpoet.site/page/4/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="欲速则不达">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg">
+<meta property="article:author" content="Vic Vagrant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/page/4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vagrantの日常笔记',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-07-03 19:30:31'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907230948.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Vagrantの日常笔记</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/08/31/hexo/hexo-%E6%90%AD%E5%BB%BA/" title="hexo 搭建">hexo 搭建</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-31T15:31:21.000Z" title="发表于 2021-08-31 23:31:21">2021-08-31</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/hexo/">hexo</a></span></div><div class="content">1.安装与初始化
+123456npm install -g hexo-clihexo init myblogcd myblog //进入这个myblog文件夹npm install
+新建完成后，指定文件夹目录下有：
+
+node_modules: 依赖包
+public：存放生成的页面
+scaffolds：生成文章的一些模板
+source：用来存放你的文章
+themes：主题
+_config.yml: 博客的配置文件
+
+12hexo ghexo server
+打开hexo的服务，在浏览器输入localhost:4000就可以看到你生成的博客了。
+2.将hexo部署到GitHub的准备工作
+
+配置Deployment
+同样在_config.yml文件中，找到Deployment，然后按照如下修改：
+
+1234deploy:  type: git  repo: git@github.com:yourname/yourname.github.io.git  branch: master
+
+安装deploy-git
+
+这个时候需要先安装deploy-git ，也就是部署的命令,这样你才能用命令部署 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/05/14/Java/volatile%E5%85%B3%E9%94%AE%E5%AD%97/" title="volatile关键字">volatile关键字</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-05-13T22:17:03.000Z" title="发表于 2021-05-14 06:17:03">2021-05-14</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95/Java/">Java</a></span></div><div class="content">在Java相关的职位面试中，很多Java面试官都喜欢考察应聘者对Java并发的了解程度，以volatile关键字为切入点，往往会问到底，Java内存模型(JMM)和Java并发编程的一些特点都会被牵扯出来，再深入的话还会考察JVM底层实现以及操作系统的相关知识。
+接下来让我们在一个假想的面试过程中来学习一下volitile关键字吧。
+1. Java并发这块掌握的怎么样？来谈谈你对volatile关键字的理解吧。
+参考答案：
+我的理解是，被volatile修饰的共享变量，就会具有以下两个特性：
+
+保证了不同线程对该变量操作的内存可见性。
+禁止指令重排序。
+
+2. 那你可不可以详细的说一下究竟什么是内存可见性，什么又是重排序？
+参考答案：
+这个要是说起来可就多了，我就从Java内存模型开始说起吧。Java虚拟机规范试图定义一个Java内存模型(JMM)，以屏蔽所有类型的硬件和操作系统内存访问差异，让Java程序在不同的平台上能够达到一致的内存访问效果。简单地说，由于CPU执行指令的速度很快，但是内存访问速度很慢，差异不是一个量级，所以搞处理器的那群大佬们又在CPU里加了好几层高速缓存。
+在 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/03/08/Java/synchronized%E9%94%81%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B/" title="synchronized锁升级过程">synchronized锁升级过程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-03-08T04:17:03.000Z" title="发表于 2021-03-08 12:17:03">2021-03-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a></span></div><div class="content">synchronized锁升级过程
+接触过线程安全的同学想必都使用过synchronized这个关键字，在java同步代码块中，synchronized的使用方式无非有两个:
+1通过对一个对象进行加锁来实现同步；
+12345synchronized(lockObject)&#123;...&#125;
+2对一个方法进行加锁实现同步
+12345public synchornized void test()&#123;...&#125;
+无论是对一个对象进行加锁还是对一个方法进行加锁，实际上，都是对对象进行加锁。
+
+对于方式2，实际上虚拟机会根据synchronized修饰的是实例方法还是类方法，去取对应的实例对象或者Class对象来进行加锁。
+
+锁是加在对象上的，那么一个线程是如何知道这个对象被加了锁呢？又是如何知道它加的是什么类型的锁呢？
+基于这些问题，下面我讲一步一步讲解synchronized是如何被优化的，是如何从偏向锁到重量级锁的。
+锁对象
+锁实际上是加在对象上的，那么被加了锁的对象我们称之为锁对象，在java中，任何一个对象都能成为锁对象。
+为了更好着理解虚拟机是如何知道这个 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/03/08/Java/Java%E5%9F%BA%E7%A1%80%E9%9D%A2%E8%AF%9516%E9%97%AE/" title="Java基础面试16问">Java基础面试16问</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-03-07T22:17:03.000Z" title="发表于 2021-03-08 06:17:03">2021-03-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95/Java/">Java</a></span></div><div class="content">Java基础面试16问
+说说进程和线程的区别？
+进程是程序的一次执行，是系统进行资源分配和调度的独立单位，他的作用是程序能够并发执行提高资源利用率和吞吐率。
+由于进程是资源分配和调度的基本单位，因为进程的创建、销毁、切换产生大量的时间和空间的开销，进程的数量不能太多，而线程是比进程更小的能独立运行的基本单位，他是进程的一个实体，可以减少程序并发执行时的时间和空间开销，使得操作系统具有更好的并发性。
+线程基本不拥有系统资源，只有一些运行时必不可少的资源，比如程序计数器、寄存器和栈，进程则占有堆、栈。
+知道synchronized原理吗？
+synchronized是java提供的原子性内置锁，这种内置的并且使用者看不到的锁也被称为监视器锁，使用synchronized之后，会在编译之后在同步的代码块前后加上monitorenter和monitorexit字节码指令，他依赖操作系统底层互斥锁(同一时刻只有一个线程执行，我们称之为互斥)实现。他的作用主要就是实现原子性操作和解决共享变量的内存可见性问题。
+执行monitorenter指令时会尝试获取对象锁，如果对象没有被锁定或者已经获得了锁，锁 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/03/08/Java/%E5%B9%B6%E8%A1%8C%E5%92%8C%E5%B9%B6%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB/" title="并行和并发的区别">并行和并发的区别</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-03-07T22:17:03.000Z" title="发表于 2021-03-08 06:17:03">2021-03-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a></span></div><div class="content">并发：
+并发（Concurrent），在操作系统中，是指一个时间段中有几个程序都处于已启动运行到运行完毕之间，且这几个程序都是在同一个处理机上运行。
+并发不是真正意义上的“同时进行”，只是CPU把一个时间段划分成几个时间片段（时间区间），然后在这几个时间区间之间来回切换，由于CPU处理的速度非常快，只要时间间隔处理得当，即可让用户感觉是多个应用程序同时在进行。如：打游戏和听音乐两件事情在同一个时间段��都是在同一台电脑上完成了从开始到结束的动作。那么，就可以说听音乐和打游戏是并发的。
+并行：
+并行（Parallel），当系统有一个以上CPU时，当一个CPU执行一个进程时，另一个CPU可以执行另一个进程，两个进程互不抢占CPU资源，可以同时进行，这种方式我们称之为并行(Parallel)。
+其实决定并行的因素不是CPU的数量，而是CPU的核心数量，比如一个CPU多个核也可以并行。
+如下图所示：
+
+
+所以，并发是在一段时间内宏观上多个程序同时运行，并行是在某一时刻，真正有多个程序在运行。
+并行和并发的区别：
+并发，指的是多个事情，在同一时间段内同时发生了。
+并行，指的是多个事情，在同一时间 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/08/25/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E6%9E%9A%E4%B8%BE%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" title="枚举策略模式">枚举策略模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-08-25T09:41:03.000Z" title="发表于 2020-08-25 17:41:03">2020-08-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">枚举策略模式
+12345项目中使用到枚举策略模式，故对此作出总结场景：公司做末端配送，需要将公司驿站与四通一达等快递公司对接，包括驿站信息创建，修改，包裹信息同步，轨迹查询；预期：暴露给前端一个接口，前端传入不同快递公司类型和不同操作类型，决定具体的实现；
+策略模式三个重要部分：
+
+
+抽象角色: 具体要对什么操作进行抽象；
+
+
+具体角色实现：基于抽象角色进行不同实现；
+
+
+上下文切换类：这里使用枚举进行具体实现的转发；
+
+
+
+整体思路：
+多态是基础，假设有中通，申通，百事，韵达，四家快递公司需要对接，这四家快递公司都有createHub（创建驿站），updateHub（修改驿站）collection （入库揽收快递）三个操作；那么首先从实现上，需要抽取baseLogisticesSeriver（基础物流服务）里面三个接口createHub，updateHub，collection；不同的快递公司再具体实现不同业务逻辑；
+那么如何根据不同快递公司进入到不同的实现类里去呢，又怎么根据不同操作找到具体方法呢？这个时候就需要定义枚举帮助我们找到具体实现类中的具体方法；
+123456789101 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/08/25/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" title="观察者模式">观察者模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-08-25T09:41:03.000Z" title="发表于 2020-08-25 17:41:03">2020-08-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">什么是观察者模式？
+观察者模式（Observer Pattern）定义了对象间的一种一对多的依赖关系，这样只要一个对象的状态发生改变，其依赖的所有相关对象都会得到通知并自动更新。
+在观察者模式中，发生改变的对象叫做观察目标，而被通知更新的对象称为观察��，一个观察目标对应多个观察者，观察者一般是一个列表集合，可以根据需要动态增加和删除，易于扩展。
+使用观察者模式的优点在于观察目标和观察者之间是抽象松耦合关系，降低了两者之间的耦合关系。
+发布-订阅模式
+观察者模式很多地方也叫发布－订阅模式（Publish/Subscribe），其实也可以这么理解，不过两者之间还是略有不同。
+观察者模式中的观察者是直接绑定观察目标，观察目标要维护一套观察者列表，两者是有一个基于接口的组合依赖关系的，所以说观察者模式虽然是松耦合的，但并不是完全解耦的。
+而发布－订阅模式中的发布者和订阅者两者并没有任何联系，发布者通过中间方发布一个主题（Topic），订阅者通过中间方（调度中心）订阅一个主题（Topic），发布者状态的变更也并不会直接通知订阅者，而要通过中间方进行通知，或者订阅者自行从中间方拉取，所以说发布－ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/08/25/%E5%85%AB%E8%82%A1%E6%96%87/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">设计模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-08-25T09:41:03.000Z" title="发表于 2020-08-25 17:41:03">2020-08-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">Q1：设计模式有哪些原则？
+**开闭原则：**OOP 中最基础的原则，指一个软件实体（类、模块、方法等）应该对扩展开放，对修改关闭。强调用抽象构建框架，用实现扩展细节，提高代码的可复用性和可维护性。
+**单一职责原则：**一个类、接口或方法只负责一个职责，降低代码复杂度以及变更引起的风险。
+**依赖倒置原则：**程序应该依赖于抽象类或接口，而不是具体的实现类。
+**接口隔离原则：**将不同功能定义在不同接口中实现接口隔离，避免了类依赖它不需要的接口，减少了接口之间依赖的冗余性和复杂性。
+**里氏替换原则：**开闭原则的补充，规定了任何父类可以出现的地方子类都一定可以出现，可以约束继承泛滥，加强程序健壮性。
+**迪米特原则：**也叫最少知道原则，每个模块对其他模块都要尽可能少地了解和依赖，降低代码耦合度。
+**合成/聚合原则：**尽量使用组合(has-a)/聚合(contains-a)而不是继承(is-a)达到软件复用的目的，避免滥用继承带来的方法污染和方法爆炸，方法污染指父类的行为通过继承传递给子类，但子类并不具备执行此行为的能力；方法爆炸指继承树不断扩大，底层类拥有的方法过于繁杂，导 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/08/20/%E5%85%AB%E8%82%A1%E6%96%87/%E5%B9%B6%E5%8F%91/Java%E5%88%9B%E5%BB%BA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%848%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="Java创建多线程的8种方式">Java创建多线程的8种方式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-08-20T09:39:03.000Z" title="发表于 2020-08-20 17:39:03">2020-08-20</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/%E5%B9%B6%E5%8F%91/">并发</a></span></div><div class="content">1、继承Thread类，重写run()方法
+123456789101112131415161718//方式1package cn.itcats.thread.Test1; public class Demo1 extends Thread&#123;	    //重写的是父类Thread的run()	public void run() &#123;		System.out.println(getName()+&quot;is running...&quot;);	&#125;			public static void main(String[] args) &#123;		Demo1 demo1 = new Demo1();		Demo1 demo2 = new Demo1();		demo1.start();		demo2.start();	&#125;&#125;
+2、实现Runnable接口，重写run()
+实现Runnable接口只是完成了线程任务的编写
+若要启动线程，需要new Thread(Runnable target)，再有thread对象调用start()方法启动线程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/08/20/%E5%85%AB%E8%82%A1%E6%96%87/%E5%B9%B6%E5%8F%91/%E5%B9%B6%E5%8F%91-3-%E7%BA%BF%E7%A8%8B/" title="并发 - 3.线程">并发 - 3.线程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-08-20T09:33:03.000Z" title="发表于 2020-08-20 17:33:03">2020-08-20</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/%E5%B9%B6%E5%8F%91/">并发</a></span></div><div class="content">线程 13
+Q1：线程的生命周期有哪些状态？
+NEW：新建状态，线程被创建且未启动，此时还未调用 start 方法。
+RUNNABLE：Java 将操作系统中的就绪和运行两种状态统称为 RUNNABLE，此时线程有可能在等待时间片，也有可能在执行。
+BLOCKED：阻塞状态，可能由于锁被其他线程占用、调用了 sleep 或 join 方法、执行了 wait方法等。
+WAITING：等待状态，该状态线程不会被分配 CPU 时间片，需要其他线程通知或中断。可能由于调用了无参的 wait 和 join 方法。
+TIME_WAITING：限期等待状态，可以在指定时间内自行返回。导可能由于调用了带参的 wait 和 join 方法。
+TERMINATED：终止状态，表示当前线程已执行完毕或异常退出。
+
+Q2：线程的创建方式有哪些？
+C4 - Java创建多线程的8种方式
+① 继承 Thread 类并重写 run 方法。实现简单，但不符合里氏替换原则，不可以继承其他类。
+② 实现 Runnable 接口并重写 run 方法。避免了单继承局限性，编程更加灵活，实现解耦。
+12345678910new ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#content-inner">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/5/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-comment-dots"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/categories/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a>
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docker/"><span class="card-category-list-name">Docker</span><span class="card-category-list-count">1</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docker/%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/"><span class="card-category-list-name">基础概念</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">18</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="card-category-list-name">设计模式</span><span class="card-category-list-count">2</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Jenkins/"><span class="card-category-list-name">Jenkins</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">2</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/"><span class="card-category-list-name">基础概念</span><span class="card-category-list-count">2</span></a></li></ul></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Docker/" style="font-size: 1.1em; color: #999">Docker</a> <a href="/tags/JVM/" style="font-size: 1.33em; color: #99a2af">JVM</a> <a href="/tags/Java/" style="font-size: 1.44em; color: #99a7ba">Java</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/Linux/" style="font-size: 1.16em; color: #999b9e">Linux</a> <a href="/tags/MySQL/" style="font-size: 1.27em; color: #99a0a9">MySQL</a> <a href="/tags/MySQL%E5%A4%8D%E5%88%B6%E6%9C%BA%E5%88%B6/" style="font-size: 1.1em; color: #999">MySQL复制机制</a> <a href="/tags/No122/" style="font-size: 1.1em; color: #999">No122</a> <a href="/tags/No189/" style="font-size: 1.16em; color: #999b9e">No189</a> <a href="/tags/Pod/" style="font-size: 1.1em; color: #999">Pod</a> <a href="/tags/React/" style="font-size: 1.1em; color: #999">React</a> <a href="/tags/Redis/" style="font-size: 1.33em; color: #99a2af">Redis</a> <a href="/tags/dfs/" style="font-size: 1.1em; color: #999">dfs</a> <a href="/tags/hexo/" style="font-size: 1.21em; color: #999ea4">hexo</a> <a href="/tags/kubernetes/" style="font-size: 1.39em; color: #99a4b4">kubernetes</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 1.1em; color: #999">动态规划</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.27em; color: #99a0a9">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" style="font-size: 1.21em; color: #999ea4">数据结构和算法</a> <a href="/tags/%E6%95%B0%E7%BB%84%E7%BF%BB%E8%BD%AC/" style="font-size: 1.16em; color: #999b9e">数组翻转</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 1.27em; color: #99a0a9">框架</a> <a href="/tags/%E7%8E%AF%E7%8A%B6%E6%9B%BF%E6%8D%A2/" style="font-size: 1.16em; color: #999b9e">环状替换</a> <a href="/tags/%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/" style="font-size: 1.1em; color: #999">股票问题</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" style="font-size: 1.21em; color: #999ea4">设计原则</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.21em; color: #999ea4">设计模式</a> <a href="/tags/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" style="font-size: 1.1em; color: #999">贪心算法</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.5em; color: #99a9bf">面试</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">十一月 2021</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/10/"><span class="card-archive-list-date">十月 2021</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">九月 2021</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/05/"><span class="card-archive-list-date">五月 2021</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">88</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-08-26T16:00:00.000Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">181.5k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-07-03T11:30:31.635Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"><script>function subtitleType () {
+  if (false) { 
+    var typed = new Typed("#subtitle", {
+      strings: "一个人的命运啊&#44; 当然要靠自我奋斗&#44; 但是也要考虑到历史的行程。".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = '一个人的命运啊&#44; 当然要靠自我奋斗&#44; 但是也要考虑到历史的行程。'
+  }
+}
+
+if (false) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

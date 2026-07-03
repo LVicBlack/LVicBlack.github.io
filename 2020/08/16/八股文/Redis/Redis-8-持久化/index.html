@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis - 8.持久化 | Vagrantの日常笔记</title><meta name="keywords" content="面试,Redis"><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="持久化 9 Q1：RDB 持久化的原理？ RDB 持久化是把当前进程数据生成快照保存到硬盘的过程，触发 RDB 持久化过程分为手动触发和自动触发。 手动触发分别对应 save 和 bgsave 命令：  save：阻塞当前 Redis 服务器，直到 RDB 过程完成为止，对于内存比较大的实例会造成长时间阻塞，线上环境不建议使用。 bgasve：Redis 进程执行 fork 操作创建子进程，RDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis - 8.持久化">
+<meta property="og:url" content="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/Redis/Redis-8-%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="持久化 9 Q1：RDB 持久化的原理？ RDB 持久化是把当前进程数据生成快照保存到硬盘的过程，触发 RDB 持久化过程分为手动触发和自动触发。 手动触发分别对应 save 和 bgsave 命令：  save：阻塞当前 Redis 服务器，直到 RDB 过程完成为止，对于内存比较大的实例会造成长时间阻塞，线上环境不建议使用。 bgasve：Redis 进程执行 fork 操作创建子进程，RDB">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2020-08-16T09:58:03.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:28:02.898Z">
+<meta property="article:author" content="Vic Vagrant">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/Redis/Redis-8-%E6%8C%81%E4%B9%85%E5%8C%96/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis - 8.持久化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-02 10:28:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis - 8.持久化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-08-16T09:58:03.000Z" title="发表于 2020-08-16 17:58:03">2020-08-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-02T02:28:02.898Z" title="更新于 2022-04-02 10:28:02">2022-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/Redis/">Redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis - 8.持久化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="持久化-9"><strong>持久化 9</strong></h3>
+<h4 id="Q1：RDB-持久化的原理？"><strong>Q1：RDB 持久化的原理？</strong></h4>
+<p>RDB 持久化是把当前进程数据生成快照保存到硬盘的过程，触发 RDB 持久化过程分为手动触发和自动触发。</p>
+<p>手动触发分别对应 save 和 bgsave 命令：</p>
+<ul>
+<li>save：阻塞当前 Redis 服务器，直到 RDB 过程完成为止，对于内存比较大的实例会造成长时间阻塞，线上环境不建议使用。</li>
+<li>bgasve：Redis 进程执行 fork 操作创建子进程，RDB 持久化过程由子进程负责，完成后自动结束。阻塞只发生在 fork 阶段，一般时间很短。bgsave 是针对 save 阻塞问题做的优化，因此 Redis 内部所有涉及 RDB 的操作都采用 bgsave 的方式，而 save 方式已经废弃。</li>
+</ul>
+<p>除了手动触发外，Redis 内部还存在自动触发 RDB 的持久化机制，例如：</p>
+<ul>
+<li>使用 save 相关配置，如 save m n，表示 m 秒内数据集存在 n 次修改时，自动触发 bgsave。</li>
+<li>如果从节点执行全量复制操作，主节点自动执行 bgsave 生成 RDB 文件并发送给从节点。</li>
+<li>执行 debug reload 命令重新加载 Redis 时也会自动触发 save 操作。</li>
+<li>默认情况下执行 shutdown 命令时，如果没有开启 AOF 持久化功能则自动执行 bgsave。</li>
+</ul>
+<hr>
+<h4 id="Q2：bgsave-的原理？"><strong>Q2：bgsave 的原理？</strong></h4>
+<p>① 执行 bgsave 命令，Redis 父进程判断当前是否存在正在执行的子进程，如 RDB/AOF 子进程，如果存在 bgsave 命令直接返回。</p>
+<p>② 父进程执行 fork 操作创建子进程，fork 操作过程中父进程会阻塞。</p>
+<p>③ 父进程 fork 完成后，bgsave 命令返回并不再阻塞父进程，可以继续响应其他命令。</p>
+<p>④ 子进程创建 RDB 文件，根据父进程内存生成临时快照文件，完成后对原有文件进行原子替换。</p>
+<p>⑤ 进程发送信号给父进程表示完成，父进程更新统计信息。</p>
+<hr>
+<h4 id="Q3：RDB-持久化的优点？"><strong>Q3：RDB 持久化的优点？</strong></h4>
+<p>RDB 是一个紧凑压缩的二进制文件，代表 Redis 在某个时间点上的数据快照。非常适合于备份，全量复制等场景。例如每 6 个消时执行 bgsave 备份，并把 RDB 文件拷贝到远程机器或者文件系统中，用于灾难恢复。</p>
+<p>Redis 加载 RDB 恢复数据远远快于 AOF 的方式。</p>
+<hr>
+<h4 id="Q4：RDB-持久化的缺点？"><strong>Q4：RDB 持久化的缺点？</strong></h4>
+<p>RDB 方式数据无法做到实时持久化/秒级持久化，因为 bgsave 每次运行都要执行 fork 操作创建子进程，属于重量级操作，频繁执行成本过高。针对 RDB 不适合实时持久化的问题，Redis 提供了 AOF 持久化方式。</p>
+<p>RDB 文件使用特定二进制格式保存，Redis 版本演进过程中有多个格式的 RDB 版本，存在老版本 Redis 服务无法兼容新版 RDB 格式的问题。</p>
+<hr>
+<h4 id="Q5：AOF-持久化的原理？"><strong>Q5：AOF 持久化的原理？</strong></h4>
+<p>AOF 持久化以独立日志的方式记录每次写命令，重启时再重新执行 AOF 文件中的命令达到恢复数据的目的。AOF 的主要作用是解决了数据持久化的实时性，目前是 Redis 持久化的主流方式。</p>
+<p>开启 AOF 功能需要设置：appendonly yes，默认不开启。保存路径同 RDB 方式一致，通过 dir 配置指定。</p>
+<p>AOF 的工作流程操作：命令写入 append、文件同步 sync、文件重写 rewrite、重启加载 load：</p>
+<ul>
+<li>所有的写入命令会追加到 aof_buf 缓冲区中。</li>
+<li>AOF 缓冲区根据对应的策略向硬盘做同步操作。</li>
+<li>随着 AOF 文件越来越大，需要定期对 AOF 文件进行重写，达到压缩的目的。</li>
+<li>当服务器重启时，可以加载 AOF 文件进行数据恢复。</li>
+</ul>
+<hr>
+<h4 id="Q6：AOF-命令写入的原理？"><strong>Q6：AOF 命令写入的原理？</strong></h4>
+<p>AOF 命令写入的内容直接是文本协议格式，采用文本协议格式的原因：</p>
+<ul>
+<li>文本协议具有很好的兼容性。</li>
+<li>开启 AOF 后所有写入命令都包含追加操作，直接采用协议格式避免了二次处理开销。</li>
+<li>文本协议具有可读性，方便直接修改和处理。</li>
+</ul>
+<p>AOF 把命令追加到缓冲区的原因：</p>
+<p>Redis 使用单线程响应命令，如果每次写 AOF 文件命令都直接追加到硬盘，那么性能完全取决于当前硬盘负载。先写入缓冲区中还有另一个好处，Redis 可以提供多种缓冲区同步硬盘策略，在性能和安全性方面做出平衡。</p>
+<hr>
+<h4 id="Q7：AOF-文件同步的原理？"><strong>Q7：AOF 文件同步的原理？</strong></h4>
+<p>Redis 提供了多种 AOF 缓冲区文件同步策略，由参数 appendfsync 控制，不同值的含义如下：</p>
+<ul>
+<li>always：命令写入缓冲区后调用系统 fsync 操作同步到 AOF 文件，fsync 完成后线程返回。每次写入都要同步 AOF，性能较低，不建议配置。</li>
+<li>everysec：命令写入缓冲区后调用系统 write 操作，write 完成后线程返回。fsync 同步文件操作由专门线程每秒调用一次。是建议的策略，也是默认配置，兼顾性能和数据安全。</li>
+<li>no：命令写入缓冲区后调用系统 write 操作，不对 AOF 文件做 fsync 同步，同步硬盘操作由操作系统负责，周期通常最长 30 秒。由于操作系统每次同步 AOF 文件的周期不可控，而且会加大每次同步硬盘的数据量，虽然提升了性能，但安全性无法保证。</li>
+</ul>
+<hr>
+<h4 id="Q8：AOF-文件重写的原理？"><strong>Q8：AOF 文件重写的原理？</strong></h4>
+<p>文件重写是把 Redis 进程内的数据转化为写命令同步到新 AOF 文件的过程，可以降低文件占用空间，更小的文件可以更快地被加载。</p>
+<p>重写后 AOF 文件变小的原因：</p>
+<ul>
+<li>进程内已经超时的数据不再写入文件。</li>
+<li>旧的 AOF 文件含有无效命令，重写使用进程内数据直接生成，这样新的 AOF 文件只保留最终数据写入命令。</li>
+<li>多条写命令可以合并为一个，为了防止单条命令过大造成客户端缓冲区溢出，对于 list、set、hash、zset 等类型操作，以 64 个元素为界拆分为多条。</li>
+</ul>
+<p>AOF 重写分为手动触发和自动触发，手动触发直接调用 bgrewriteaof 命令，自动触发根据 auto-aof-rewrite-min-size 和 auto-aof-rewrite-percentage 参数确定自动触发时机。</p>
+<p>重写流程：</p>
+<p>① 执行 AOF 重写请求，如果当前进程正在执行 AOF 重写，请求不执行并返回，如果当前进程正在执行 bgsave 操作，重写命令延迟到 bgsave 完成之后再执行。</p>
+<p>② 父进程执行 fork 创建子进程，开销等同于 bgsave 过程。</p>
+<p>③ 父进程 fork 操作完成后继续响应其他命令，所有修改命令依然写入 AOF 缓冲区并同步到硬盘，保证原有 AOF 机制正确性。</p>
+<p>④ 子进程根据内存快照，按命令合并规则写入到新的 AOF 文件。每次批量写入数据量默认为 32 MB，防止单次刷盘数据过多造成阻塞。</p>
+<p>⑤ 新 AOF 文件写入完成后，子进程发送信号给父进程，父进程更新统计信息。</p>
+<p>⑥ 父进程把 AOF 重写缓冲区的数据写入到新的 AOF 文件并替换旧文件，完成重写。</p>
+<hr>
+<h4 id="Q9：AOF-重启加载的原理？"><strong>Q9：AOF 重启加载的原理？</strong></h4>
+<p>AOF 和 RDB 文件都可以用于服务器重启时的数据恢复。Redis 持久化文件的加载流程：</p>
+<p>① AOF 持久化开启且存在 AOF 文件时，优先加载 AOF 文件。</p>
+<p>② AOF 关闭时且存在 RDB 文件时，记载 RDB 文件。</p>
+<p>③ 加载 AOF/RDB 文件成功后，Redis 启动成功。</p>
+<p>④ AOF/RDB 文件存在错误导致加载失败时，Redis 启动失败并打印错误信息。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Vic Vagrant</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/Redis/Redis-8-%E6%8C%81%E4%B9%85%E5%8C%96/">https://vagrantpoet.site/2020/08/16/八股文/Redis/Redis-8-持久化/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://vagrantpoet.site" target="_blank">Vagrantの日常笔记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/Redis/Redis-7-%E9%94%AE%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Redis - 7.键和数据库管理</div></div></a></div><div class="next-post pull-right"><a href="/2020/08/20/%E5%85%AB%E8%82%A1%E6%96%87/Java/Java_%E5%9F%BA%E7%A1%80-1-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java 基础 - 1.语言特性</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/08/16/Redis/redis存json数据时选择string还是hash/" title="redis存json数据时选择string还是hash"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">redis存json数据时选择string还是hash</div></div></a></div><div><a href="/2020/08/16/八股文/Redis/Redis-1-架构/" title="Redis - 1.架构"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">Redis - 1.架构</div></div></a></div><div><a href="/2020/08/16/八股文/Redis/Redis-2-string/" title="Redis - 2.string"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">Redis - 2.string</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96-9"><span class="toc-number">1.</span> <span class="toc-text">持久化 9</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q1%EF%BC%9ARDB-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">Q1：RDB 持久化的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q2%EF%BC%9Abgsave-%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">Q2：bgsave 的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q3%EF%BC%9ARDB-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E4%BC%98%E7%82%B9%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">Q3：RDB 持久化的优点？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q4%EF%BC%9ARDB-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-number">1.4.</span> <span class="toc-text">Q4：RDB 持久化的缺点？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q5%EF%BC%9AAOF-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">Q5：AOF 持久化的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q6%EF%BC%9AAOF-%E5%91%BD%E4%BB%A4%E5%86%99%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.6.</span> <span class="toc-text">Q6：AOF 命令写入的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q7%EF%BC%9AAOF-%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.7.</span> <span class="toc-text">Q7：AOF 文件同步的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q8%EF%BC%9AAOF-%E6%96%87%E4%BB%B6%E9%87%8D%E5%86%99%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.8.</span> <span class="toc-text">Q8：AOF 文件重写的原理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q9%EF%BC%9AAOF-%E9%87%8D%E5%90%AF%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.9.</span> <span class="toc-text">Q9：AOF 重启加载的原理？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

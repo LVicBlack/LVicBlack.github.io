@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>No122-BestTimeToBuyAndSellStockIi（股票问题通解） | Vagrantの日常笔记</title><meta name="keywords" content="dfs,动态规划,贪心算法,No122,股票问题"><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="转载于leetcode，此处作为笔记用，不妥删除 原帖地址：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;best-time-to-buy-and-sell-stock-ii&#x2F;solution&#x2F;tan-xin-suan-fa-by-liweiwei1419-2&#x2F;   本题解于 2020 年 10 月 22 日重写； 推荐阅读 @stormsunshine 编写的文章《股票问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="No122-BestTimeToBuyAndSellStockIi（股票问题通解）">
+<meta property="og:url" content="https://vagrantpoet.site/2022/01/11/leetcode/No122-BestTimeToBuyAndSellStockIi%EF%BC%88%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E9%80%9A%E8%A7%A3%EF%BC%89/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="转载于leetcode，此处作为笔记用，不妥删除 原帖地址：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;best-time-to-buy-and-sell-stock-ii&#x2F;solution&#x2F;tan-xin-suan-fa-by-liweiwei1419-2&#x2F;   本题解于 2020 年 10 月 22 日重写； 推荐阅读 @stormsunshine 编写的文章《股票问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2022-01-11T09:06:00.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:28:02.895Z">
+<meta property="article:author" content="Vic Vagrant">
+<meta property="article:tag" content="dfs">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="贪心算法">
+<meta property="article:tag" content="No122">
+<meta property="article:tag" content="股票问题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/2022/01/11/leetcode/No122-BestTimeToBuyAndSellStockIi%EF%BC%88%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E9%80%9A%E8%A7%A3%EF%BC%89/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'No122-BestTimeToBuyAndSellStockIi（股票问题通解）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-02 10:28:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">No122-BestTimeToBuyAndSellStockIi（股票问题通解）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-11T09:06:00.000Z" title="发表于 2022-01-11 17:06:00">2022-01-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-02T02:28:02.895Z" title="更新于 2022-04-02 10:28:02">2022-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/leetcode/">leetcode</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="No122-BestTimeToBuyAndSellStockIi（股票问题通解）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>转载于leetcode，此处作为笔记用，不妥删除<br>
+原帖地址：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/">https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/</a></p>
+</blockquote>
+<ul>
+<li>本题解于 2020 年 10 月 22 日重写；</li>
+<li>推荐阅读 <a href="/u/stormsunshine/">@stormsunshine</a> 编写的文章《<a target="_blank" rel="noopener" href="https://leetcode-cn.com/circle/article/qiAgHn/">股票问题系列通解（转载翻译）</a>》。</li>
+</ul>
+<p>这一系列问题的目录：</p>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock">121. 买卖股票的最佳时机</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/bao-li-mei-ju-dong-tai-gui-hua-chai-fen-si-xiang-b/">暴力解法、动态规划（Java）</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii">122. 买卖股票的最佳时机 II</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/">暴力搜索、贪心算法、动态规划（Java）</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii">123. 买卖股票的最佳时机 III</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/solution/dong-tai-gui-hua-by-liweiwei1419-7/">动态规划（Java）</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv">188. 买卖股票的最佳时机 IV</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/solution/dong-tai-gui-hua-by-liweiwei1419-4/">动态规划（「力扣」更新过用例，只有优化空间的版本可以 AC）</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown">309. 最佳买卖股票时机含冷冻期</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/dong-tai-gui-hua-by-liweiwei1419-5/">动态规划（Java）</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee">714. 买卖股票的最佳时机含手续费</a></td>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/solution/dong-tai-gui-hua-by-liweiwei1419-6/">动态规划（Java）</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="方法一：暴力搜索（超时）">方法一：暴力搜索（超时）</h3>
+<p>根据题意：由于不限制交易次数，在每一天，就可以根据当前是否持有股票选择相应的操作。「暴力搜索」在树形问题里也叫「回溯搜索」、「回溯法」。</p>
+<p>首先画出树形图，然后编码。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/3ede46d543e0fcd2ec1b4f9031637fd404b4bdf73505bb1233d870ac92ea8283-image.png" alt="image.png"></p>
+<p><strong>参考代码 1</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> res;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.res = <span class="number">0</span>;</span><br><span class="line">        dfs(prices, <span class="number">0</span>, len, <span class="number">0</span>, res);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> prices 股价数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> index  当前是第几天，从 0 开始</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> status 0 表示不持有股票，1表示持有股票，</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> profit 当前收益</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span>[] prices, <span class="type">int</span> index, <span class="type">int</span> len, <span class="type">int</span> status, <span class="type">int</span> profit)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (index == len) &#123;</span><br><span class="line">            <span class="built_in">this</span>.res = Math.max(<span class="built_in">this</span>.res, profit);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dfs(prices, index + <span class="number">1</span>, len, status, profit);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (status == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 可以尝试转向 1</span></span><br><span class="line">            dfs(prices, index + <span class="number">1</span>, len, <span class="number">1</span>, profit - prices[index]);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 此时 status == 1，可以尝试转向 0</span></span><br><span class="line">            dfs(prices, index + <span class="number">1</span>, len, <span class="number">0</span>, profit + prices[index]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很显然，超时在意料之中。注意看这个超时是在数据规模很大的时候，因此，可以说明<strong>搜索算法是正确的</strong>。</p>
+<p><img src="https://pic.leetcode-cn.com/09398f841303b9068f1bd3852e6b381c8407d66067a526fecd1bbcca9c90d507-image.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/c09995ebd543a96851314b0272914e4f6dd1e0f074f21648ef1b1318a8845892-image.png" alt="image.png"></p>
+<h3 id="方法二：动态规划（通用）">方法二：动态规划（通用）</h3>
+<p>根据 「力扣」第 121 题的思路，需要设置一个二维矩阵表示状态。</p>
+<h3 id="第-1-步：定义状态">第 1 步：定义状态</h3>
+<p>状态 <code>dp[i][j]</code> 定义如下：</p>
+<p><code>dp[i][j]</code> 表示到下标为 <code>i</code> 的这一天，持股状态为 <code>j</code> 时，我们手上拥有的最大现金数。</p>
+<p><strong>注意</strong>：限定持股状态为 <code>j</code> 是为了方便推导状态转移方程，这样的做法满足 <strong>无后效性</strong>。</p>
+<p>其中：</p>
+<ul>
+<li>第一维 <code>i</code> 表示下标为 <code>i</code> 的那一天（ <strong>具有前缀性质，即考虑了之前天数的交易</strong> ）；</li>
+<li>第二维 <code>j</code> 表示下标为 <code>i</code> 的那一天是持有股票，还是持有现金。这里 <code>0</code> 表示持有现金（cash），<code>1</code> 表示持有股票（stock）。</li>
+</ul>
+<h3 id="第-2-步：思考状态转移方程">第 2 步：思考状态转移方程</h3>
+<ul>
+<li>状态从持有现金（cash）开始，到最后一天我们关心的状态依然是持有现金（cash）；</li>
+<li>每一天状态可以转移，也可以不动。状态转移用下图表示：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/041a4d01398359409ecc69dacc13a44d179dd1a2a9f43b1def80e9a6acceee55-image.png" alt="image.png"></p>
+<p>（状态转移方程写在代码中）</p>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>由于不限制交易次数，除了最后一天，每一天的状态可能不变化，也可能转移；</li>
+<li>写代码的时候，可以不用对最后一天单独处理，输出最后一天，状态为 <code>0</code> 的时候的值即可。</li>
+</ul>
+<h3 id="第-3-步：确定初始值">第 3 步：确定初始值</h3>
+<p>起始的时候：</p>
+<ul>
+<li>如果什么都不做，<code>dp[0][0] = 0</code>；</li>
+<li>如果持有股票，当前拥有的现金数是当天股价的相反数，即 <code>dp[0][1] = -prices[i]</code>；</li>
+</ul>
+<h3 id="第-4-步：确定输出值">第 4 步：确定输出值</h3>
+<p>终止的时候，上面也分析了，输出 <code>dp[len - 1][0]</code>，因为一定有 <code>dp[len - 1][0] &gt; dp[len - 1][1]</code>。</p>
+<p><strong>参考代码 2</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 0：持有现金</span></span><br><span class="line">        <span class="comment">// 1：持有股票</span></span><br><span class="line">        <span class="comment">// 状态转移：0 → 1 → 0 → 1 → 0 → 1 → 0</span></span><br><span class="line">        <span class="type">int</span>[][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[len][<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] = -prices[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 这两行调换顺序也是可以的</span></span><br><span class="line">            dp[i][<span class="number">0</span>] = Math.max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>] + prices[i]);</span><br><span class="line">            dp[i][<span class="number">1</span>] = Math.max(dp[i - <span class="number">1</span>][<span class="number">1</span>], dp[i - <span class="number">1</span>][<span class="number">0</span>] - prices[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[len - <span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong>：</p>
+<ul>
+<li>时间复杂度：<em>O(N)</em>，这里 <em>N</em> 表示股价数组的长度；</li>
+<li>空间复杂度：<em>O(N)</em>，虽然是二维数组，但是第二维是常数，与问题规模无关。</li>
+</ul>
+<p>我们也可以将状态数组分开设置。</p>
+<p><strong>参考代码 3</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// cash：持有现金</span></span><br><span class="line">        <span class="comment">// hold：持有股票</span></span><br><span class="line">        <span class="comment">// 状态数组</span></span><br><span class="line">        <span class="comment">// 状态转移：cash → hold → cash → hold → cash → hold → cash</span></span><br><span class="line">        <span class="type">int</span>[] cash = <span class="keyword">new</span> <span class="title class_">int</span>[len];</span><br><span class="line">        <span class="type">int</span>[] hold = <span class="keyword">new</span> <span class="title class_">int</span>[len];</span><br><span class="line"></span><br><span class="line">        cash[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        hold[<span class="number">0</span>] = -prices[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 这两行调换顺序也是可以的</span></span><br><span class="line">            cash[i] = Math.max(cash[i - <span class="number">1</span>], hold[i - <span class="number">1</span>] + prices[i]);</span><br><span class="line">            hold[i] = Math.max(hold[i - <span class="number">1</span>], cash[i - <span class="number">1</span>] - prices[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cash[len - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong>：（同上）</p>
+<h3 id="第-5-步：考虑优化空间">第 5 步：考虑优化空间</h3>
+<p>由于当前行只参考上一行，每一行就 2 个值，因此可以考虑使用「滚动变量」（「滚动数组」技巧）。</p>
+<p><strong>参考代码 4</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// cash：持有现金</span></span><br><span class="line">        <span class="comment">// hold：持有股票</span></span><br><span class="line">        <span class="comment">// 状态转移：cash → hold → cash → hold → cash → hold → cash</span></span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">cash</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">hold</span> <span class="operator">=</span> -prices[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">preCash</span> <span class="operator">=</span> cash;</span><br><span class="line">        <span class="type">int</span> <span class="variable">preHold</span> <span class="operator">=</span> hold;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            cash = Math.max(preCash, preHold + prices[i]);</span><br><span class="line">            hold = Math.max(preHold, preCash - prices[i]);</span><br><span class="line"></span><br><span class="line">            preCash = cash;</span><br><span class="line">            preHold = hold;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cash;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong>：</p>
+<ul>
+<li>时间复杂度：<em>O(N)</em>，这里 <em>N</em> 表示股价数组的长度；</li>
+<li>空间复杂度：<em>O(1)</em>，分别使用两个滚动变量，将一维数组状态优化到常数大小。</li>
+</ul>
+<h3 id="方法三：贪心算法（针对这道问题的特殊解法）">方法三：贪心算法（针对这道问题的特殊解法）</h3>
+<p><strong>贪心算法的直觉</strong>：由于不限制交易次数，只要今天股价比昨天高，就交易。</p>
+<p>下面对这个算法进行几点说明：</p>
+<ul>
+<li>该算法仅可以用于计算，但 <strong>计算的过程并不是真正交易的过程</strong>，但可以用贪心算法计算题目要求的最大利润。下面说明等价性：以 <code>[1, 2, 3, 4]</code> 为例，这 <code>4</code> 天的股价依次上升，按照贪心算法，得到的最大利润是：</li>
+</ul>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res =  (prices[<span class="number">3</span>] - prices[<span class="number">2</span>]) + (prices[<span class="number">2</span>] - prices[<span class="number">1</span>]) + (prices[<span class="number">1</span>] - prices[<span class="number">0</span>])</span><br><span class="line">    =  prices[<span class="number">3</span>] - prices[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>仔细观察上面的式子，按照贪心算法，在下标为 <code>1</code>、<code>2</code>、<code>3</code> 的这三天，我们做的操作应该是买进昨天的，卖出今天的，虽然这种操作题目并不允许，但是它等价于：在下标为 <code>0</code> 的那一天买入，在下标为 <code>3</code> 的那一天卖出。</p>
+<ul>
+<li>为什么叫「贪心算法」</li>
+</ul>
+<p>回到贪心算法的定义：（下面是来自《算法导论（第三版）》第 16 章的叙述）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/5de2bc50e56f42566522df6fe4dcf0eca7396db765f7a2ca2fe9f1fd9a647270.png" alt=""></p>
+<blockquote>
+<p>贪心算法 在每一步总是做出在当前看来最好的选择。</p>
+</blockquote>
+<ul>
+<li>「贪心算法」 和 「动态规划」、「回溯搜索」 算法一样，完成一件事情，是 <strong>分步决策</strong> 的；</li>
+<li>「贪心算法」 在每一步总是做出在当前看来最好的选择，我是这样理解 「最好」 这两个字的意思：
+<ul>
+<li>「最好」 的意思往往根据题目而来，可能是 「最小」，也可能是 「最大」；</li>
+<li>贪心算法和动态规划相比，它既不看前面（也就是说它不需要从前面的状态转移过来），也不看后面（无后效性，后面的选择不会对前面的选择有影响），因此贪心算法时间复杂度一般是线性的，空间复杂度是常数级别的；</li>
+</ul>
+</li>
+<li>这道题 「贪心」 的地方在于，对于 「今天的股价 - 昨天的股价」，得到的结果有 3 种可能：① 正数，② <em>0</em>，③负数。贪心算法的决策是： <strong>只加正数</strong> 。</li>
+</ul>
+<p><strong>参考代码 5</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">diff</span> <span class="operator">=</span> prices[i] - prices[i - <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span> (diff &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                res += diff;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong>：</p>
+<ul>
+<li>时间复杂度：<em>O(N)</em>，这里 <em>N</em> 表示股价数组的长度；</li>
+<li>空间复杂度：<em>O(1)</em>。</li>
+</ul>
+<p>等价写法：</p>
+<p><strong>参考代码 6</strong>：</p>
+<figure class="highlight java"><figcaption><span>[]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxProfit</span><span class="params">(<span class="type">int</span>[] prices)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            res += Math.max(prices[i] - prices[i - <span class="number">1</span>], <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong>：（同上）</p>
+<p>下面证明 「贪心算法」 的有效性。</p>
+<p><strong>贪心选择性质的证明</strong>：</p>
+<p>借助 「差分」 这个概念，可以证明 「贪心算法」 的有效性。贪心算法是选择那些所有差分（严格）大于 <code>0</code> 的数，把它们相加即可。</p>
+<p><strong>使用反证法</strong>：</p>
+<p>假设 「贪心算法」 得到的解并不是最优解，即我们还能够找到一个可行解比 「贪心算法」 得到的利润还多。差分数组中除了差分为正数的项以外，还有就是差分为 <em>0</em> 的项与差分为负数的项。「贪心算法」 是所有差分为正数的项的和。有以下 <em>3</em> 种情况：</p>
+<ul>
+<li>如果可行解在 「贪心算法」 的基础上，选择了差分为 <em>0</em> 的项，得到的结果与「贪心算法」得到的结果一样，因此加上差分为 <em>0</em> 的项不会比「贪心算法」得到的结果更好；</li>
+<li>如果可行解在 「贪心算法」 的基础上，选择了差分为负数的项，加上一个负数得到的结果一定比 「贪心算法」 得到的结果要少，加上差分为负数的项，一定比 「贪心算法」 得到的结果更少；</li>
+<li>如果可行解在 「贪心算法」 的基础上，去掉了任何一个差分为正数的项，同上，得到的结果一定比 「贪心算法」 得到的结果要小，因此，「贪心算法」 的所有组成项不能删去任何一个。</li>
+</ul>
+<p>综上，除了 「贪心算法」 以外，找不到一个更优的解法，因此 「贪心算法」 就是最优解。（证完）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Vic Vagrant</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vagrantpoet.site/2022/01/11/leetcode/No122-BestTimeToBuyAndSellStockIi%EF%BC%88%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E9%80%9A%E8%A7%A3%EF%BC%89/">https://vagrantpoet.site/2022/01/11/leetcode/No122-BestTimeToBuyAndSellStockIi（股票问题通解）/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://vagrantpoet.site" target="_blank">Vagrantの日常笔记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dfs/">dfs</a><a class="post-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><a class="post-meta__tags" href="/tags/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">贪心算法</a><a class="post-meta__tags" href="/tags/No122/">No122</a><a class="post-meta__tags" href="/tags/%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/">股票问题</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/08/%E3%80%8A%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BE%8E%E3%80%8B%E7%AC%94%E8%AE%B0/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%EF%BC%88%E4%B8%89%EF%BC%89-%20%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8%E6%80%A7/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">设计原则（三）- 代码复用性</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/12/leetcode/No189_RotateArray%EF%BC%88%E7%8E%AF%E7%8A%B6%E6%9B%BF%E6%8D%A2%20&amp;%20%E6%95%B0%E7%BB%84%E7%BF%BB%E8%BD%AC%EF%BC%89/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">No189_RotateArray（环状替换 &amp; 数组翻转）</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B%E6%90%9C%E7%B4%A2%EF%BC%88%E8%B6%85%E6%97%B6%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">方法一：暴力搜索（超时）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%88%E9%80%9A%E7%94%A8%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">方法二：动态规划（通用）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E5%AE%9A%E4%B9%89%E7%8A%B6%E6%80%81"><span class="toc-number">3.</span> <span class="toc-text">第 1 步：定义状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E6%80%9D%E8%80%83%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%E6%96%B9%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">第 2 步：思考状态转移方程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-3-%E6%AD%A5%EF%BC%9A%E7%A1%AE%E5%AE%9A%E5%88%9D%E5%A7%8B%E5%80%BC"><span class="toc-number">5.</span> <span class="toc-text">第 3 步：确定初始值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-4-%E6%AD%A5%EF%BC%9A%E7%A1%AE%E5%AE%9A%E8%BE%93%E5%87%BA%E5%80%BC"><span class="toc-number">6.</span> <span class="toc-text">第 4 步：确定输出值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-5-%E6%AD%A5%EF%BC%9A%E8%80%83%E8%99%91%E4%BC%98%E5%8C%96%E7%A9%BA%E9%97%B4"><span class="toc-number">7.</span> <span class="toc-text">第 5 步：考虑优化空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%EF%BC%88%E9%92%88%E5%AF%B9%E8%BF%99%E9%81%93%E9%97%AE%E9%A2%98%E7%9A%84%E7%89%B9%E6%AE%8A%E8%A7%A3%E6%B3%95%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">方法三：贪心算法（针对这道问题的特殊解法）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

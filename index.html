@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vagrantの日常笔记</title><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="欲速则不达">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vagrantの日常笔记">
+<meta property="og:url" content="https://vagrantpoet.site/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="欲速则不达">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg">
+<meta property="article:author" content="Vic Vagrant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vagrantの日常笔记',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-07-03 19:30:31'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907230948.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Vagrantの日常笔记</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></span></div><div class="content">基本概念
+哪些属性属于pod层级
+调度、网络、存储，以及安全相关的属性
+这些属性的共同特征是，它们描述的是“机器”这个整体，而不是里面运行的“程序”。
+
+配置这个“机器”的网卡（即：Pod 的网络定义）
+配置这个“机器”的磁盘（即：Pod 的存储定义）
+配置这个“机器”的防火墙（即：Pod 的安全定义）
+这台“机器”运行在哪个服务器之上（即：Pod 的调度）
+
+NodeSelector
+123456apiVersion: v1kind: Pod...spec: nodeSelector:   disktype: ssd
+Pod 永远只能运行在携带了“disktype: ssd”标签（Label）的节点上；否则，它将调度失败。
+NodeName
+pod.spec.nodeName将Pod直接调度到指定的Node节点上，会【跳过Scheduler的调度策略】，该匹配规则是【强制】匹配。可以越过Taints污点进行调度。
+一旦 Pod 的这个字段被赋值，Kubernetes 项目就会被认为这个 Pod 已经经过了调度，调度的结果就是赋值的节点名字。
+所以，这个字段一般由调度器负责设置，也可以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></span></div><div class="content">AOP 是什么
+AOP 即面向切面编程，简单地说就是将代码中重复的部分抽取出来，在需要执行的时候使用动态代理技术，在不修改源码的基础上对方法进行增强。
+Spring 根据类是否实现接口来判断动态代理方式，如果实现接口会使用 JDK 的动态代理，核心是 InvocationHandler 接口和 Proxy 类，如果没有实现接口会使用 CGLib 动态代理，CGLib 是在运行时动态生成某个类的子类，如果某个类被标记为 final，不能使用 CGLib 。
+JDK 动态代理主要通过重组字节码实现，首先获得被代理对象的引用和所有接口，生成新的类必须实现被代理类的所有接口，动态生成Java 代码后编译新生成的 .class 文件并重新加载到 JVM 运行。JDK 代理直接写 Class 字节码，CGLib 是采用 ASM 框架写字节码，生成代理类的效率低。但是 CGLib 调用方法的效率高，因为 JDK 使用反射调用方法，CGLib 使用 FastClass 机制为代理类和被代理类各生成一个类，这个类会为代理类或被代理类的方法生成一个 index，这个 index 可以作为参数直接定位要调用 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/Java/JVM/">JVM</a></span></div><div class="content">常量池存储的内容
+
+Class文件常量池（Class Constant Pool）
+每个Class文件都会有一个单独的常量池，我们称为Class文件常量池，我们可以用javap命令反汇编Class文件，可以查看java编译器为我们生成的字节码。通过它，我们可以对照源代码和字节码，从而了解很多编译器内部的工作。而在得到的结果中的Constant pool字段就是class文件常量池.
+
+从上图可以看出，Class文件中包括：
+
+
+魔数：它的唯一作用是确定这个文件是否可以被JVM接受。很多文件储存标准中都使用魔数来进行身份识别的，其占用这个文件的前四个字节。
+
+
+版本号：第5和第6个字节是副版本号，第7个和第8个是主版本号。
+
+
+常量池计数器：也就是常量池的入口，代表常量池的容量计数器。
+
+
+常量池：
+
+字面量(literal)：字面量就是我们所说的常量概念，如：
+
+文本字符串、
+被声明为final的常量值。
+基本数据类型的值
+
+
+符号引用：而符号引用则属于编译原理的方面的概念。是一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。包括以下三类常量： ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/">深入剖析kubernetes（书籍）笔记</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod/">Pod</a></span></div><div class="content">
+Pod，是 Kubernetes 项目中最小的 API 对象
+或者说，Pod，是 Kubernetes 项目的原子调度单位。
+
+类比Linux系统
+展示当前系统中正在运行的进程的树状结构pstree -g
+12345678systemd(1)-+-accounts-daemon(1984)-+-&#123;gdbus&#125;(1984)           | `-&#123;gmain&#125;(1984)           |-acpid(2044)          ...                 |-rsyslogd(1632)-+-&#123;in:imklog&#125;(1632)           |  |-&#123;in:imuxsock) S 1(1632)           | `-&#123;rs:main Q:Reg&#125;(1632)
+在一个真正的操作系统里，进程是以进程组的方式，“有原则地”组织在一起。
+例如rsyslogd 的程序，它负责的是 Linux 操作系统里的日志处理。可以看到，rsyslogd 的主程序 main，和 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/kubernetes/">kubernetes</a></span></div><div class="content">Kubernetes 跟 Docker 等很多项目最大的不同，就在于它不推荐你使用命令行的方式直接运行容器（虽然 Kubernetes 项目也支持这种方式，比如：kubectl run），而是希望你用 YAML 文件的方式，即：把容器的定义、参数、配置，统统记录在一个 YAML 文件中，然后用这样一句指令把它运行起来：
+1$ kubectl create -f 我的配置文件
+编写配置文件
+e.g.
+12345678910111213141516171819apiVersion: apps/v1kind: Deploymentmetadata:  name: nginx-deploymentspec:  selector:    matchLabels:      app: nginx  replicas: 2  template:    metadata:      labels:        app: nginx    spec:      containers:      - name: nginx        image: nginx:1.7.9        ports:  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/13/kubernetes/ubuntu20.4%E5%AE%89%E8%A3%85k8s1.20%EF%BC%88kubeadm%EF%BC%89/" title="ubuntu20.4安装k8s1.20（kubeadm）">ubuntu20.4安装k8s1.20（kubeadm）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-13T14:06:00.000Z" title="发表于 2022-03-13 22:06:00">2022-03-13</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/kubernetes/">kubernetes</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/kubernetes/Kubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">Kubernetes集群搭建</a></span></div><div class="content">准备工作
+虚拟机配置：
+0. 3台
+
+Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-90-generic x86_64)
+2c4g
+40GB磁盘
+内网互通
+外网访问权限不受限制
+
+
+
+
+ip
+name
+
+
+
+
+10.168.56.101
+k8smaster1
+
+
+10.168.56.103
+k8snode1
+
+
+10.168.56.102
+k8snode2
+
+
+
+前置
+同步时间
+12345apt install ntpdatentpdate ntp.aliyun.comcrontab -e0 */1 * * * /usr/sbin/ntpdate ntp.aliyun.com
+禁用  swapoff
+123sudo swapoff -asudo sed -i &#x27;/ swap / s/^/#/&#x27; /etc/fstab#永久关闭  vim /etc/fstab  注释掉最后一行的swap
+安装并启用 Docker
+卸载旧版本Docker
+12345678#卸载旧版本dockersudo apt-get remove docker docker- ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/13/leetcode/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95/" title="欧几里得算法（gcd）">欧几里得算法（gcd）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-01-13T08:06:00.000Z" title="发表于 2022-01-13 16:06:00">2022-01-13</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/leetcode/">leetcode</a></span></div><div class="content">
+gcd(greatest common divisor) 最大公约数，指两个整数所有公共约数中最大的。
+公式：gcd(a,b)=gcd(b,a%b)gcd(a,b)=gcd(b,a\%b)gcd(a,b)=gcd(b,a%b)
+
+首先先上结论，求最大公约数，我们可以通过递归gcd(a,b)=gcd(b,a%b)gcd(a,b)=gcd(b,a\%b)gcd(a,b)=gcd(b,a%b)，gcd(a,0)=agcd(a,0)=agcd(a,0)=a计算，复杂度是logn
+证明步骤：
+
+
+证明gcd(a,b)gcd(a,b)gcd(a,b)是bbb，a%ba \% ba%b的一个公约数
+
+
+证明这个公约数是最大的。
+
+
+证明gcd(a,b)gcd(a,b)gcd(a,b)是bbb，a%ba\%ba%b的一个公约数
+我们设gcd(a,b)=dgcd(a,b)=dgcd(a,b)=d，再令a=k1∗d,b=k2∗da=k1*d,b=k2*da=k1∗d,b=k2∗d
+我们再设，a=k∗b+ca=k*b+ca=k∗b+c（也就是a除以b商k余c），那么c就是余数，也就是a%ba\%ba%b的 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/12/leetcode/No189_RotateArray%EF%BC%88%E7%8E%AF%E7%8A%B6%E6%9B%BF%E6%8D%A2%20&amp;%20%E6%95%B0%E7%BB%84%E7%BF%BB%E8%BD%AC%EF%BC%89/" title="No189_RotateArray（环状替换 &amp; 数组翻转）">No189_RotateArray（环状替换 &amp; 数组翻转）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-01-12T08:06:00.000Z" title="发表于 2022-01-12 16:06:00">2022-01-12</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/leetcode/">leetcode</a></span></div><div class="content">
+转载于leetcode，此处作为笔记用，不妥删除
+原帖地址：https://leetcode-cn.com/problems/rotate-array/solution/xuan-zhuan-shu-zu-by-leetcode-solution-nipk/
+
+环状替换
+方法一中使用额外数组的原因在于如果我们直接将每个数字放至它最后的位置，这样被放置位置的元素会被覆盖从而丢失。因此，从另一个角度，我们可以将被替换的元素保存在变量temptemptemp中，从而避免了额外数组的开销。
+我们从位置 0 开始，最初令temp=nums[0]temp=nums[0]temp=nums[0]。根据规则，位置 0 的元素会放至(0+k) mod (0+k)\bmod(0+k)mod 的位置，令x=(0+k)modnx=(0+k)modnx=(0+k)modn，此时交换temptemptemp 和nums[x]nums[x]nums[x]，完成位置 x 的更新。然后，我们考察位置 x，并交换temptemptemp 和nums[(x+k)modn]nums[(x+k)modn]nums[(x+k) ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/11/leetcode/No122-BestTimeToBuyAndSellStockIi%EF%BC%88%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E9%80%9A%E8%A7%A3%EF%BC%89/" title="No122-BestTimeToBuyAndSellStockIi（股票问题通解）">No122-BestTimeToBuyAndSellStockIi（股票问题通解）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-01-11T09:06:00.000Z" title="发表于 2022-01-11 17:06:00">2022-01-11</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/leetcode/">leetcode</a></span></div><div class="content">
+转载于leetcode，此处作为笔记用，不妥删除
+原帖地址：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/
+
+
+本题解于 2020 年 10 月 22 日重写；
+推荐阅读 @stormsunshine 编写的文章《股票问题系列通解（转载翻译）》。
+
+这一系列问题的目录：
+
+
+
+题号
+题解
+
+
+
+
+121. 买卖股票的最佳时机
+暴力解法、动态规划（Java）
+
+
+122. 买卖股票的最佳时机 II
+暴力搜索、贪心算法、动态规划（Java）
+
+
+123. 买卖股票的最佳时机 III
+动态规划（Java）
+
+
+188. 买卖股票的最佳时机 IV
+动态规划（「力扣」更新过用例，只有优化空间的版本可以 AC）
+
+
+309. 最佳买卖股票时机含冷冻期
+动态规划（Java）
+
+
+714. 买卖股票的最佳时机含手续费
+动态规划（Java）
+
+
+
+
+方法一：暴力搜索（超时）
+根据题意：由于不限制交易次数，在每一天，就可以根据当前 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/08/%E3%80%8A%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BE%8E%E3%80%8B%E7%AC%94%E8%AE%B0/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%EF%BC%88%E4%B8%89%EF%BC%89-%20%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8%E6%80%A7/" title="设计原则（三）- 代码复用性">设计原则（三）- 代码复用性</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-01-08T02:06:00.000Z" title="发表于 2022-01-08 10:06:00">2022-01-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E3%80%8A%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BE%8E%E3%80%8B%E7%AC%94%E8%AE%B0/">《设计模式之美》笔记</a></span></div><div class="content">代码复用性（Code Reusability）、代码复用（Code Reuse）和 DRY 原则的区别：
+
+复用性，是一段代码本身的属性，说明其具备被复用的特性
+代码复用，是一个行为，指客户端代码使用了一段具备复用性的代码。
+相比于代码的可复用性，DRY 原则适用性更强一些。我们可以不写可复用的代码，但一定不能写重复的代码。
+
+尽管复用、可复用性、DRY 原则这三者从理解上有所区别，但实际上要达到的目的都是类似的，都是为了减少代码量，提高代码的可读性、可维护性。
+除此之外，复用已经经过测试的老代码，bug 会比从零重新开发要少。
+提高代码复用性
+
+减少代码耦合
+满足单一职责原则
+模块化
+业务与非业务逻辑分离
+通用代码下沉
+继承、多态、抽象、封装
+应用模板等设计模式
+
+除了上面讲到的这些方法之外，复用意识也非常重要。在设计每个模块、类、函数的时候，要像设计一个外部 API 一样去思考它的复用性。
+高内聚、松耦合
+很多设计原则都以实现代码的“高内聚、松耦合”为目的，比如单一职责原则、基于接口而非实现编程等。
+高内聚
+
+所谓高内聚，就是指相近的功能应该放到同一个类中，不相近的功能不要放到同一 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-comment-dots"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/categories/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a>
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docker/"><span class="card-category-list-name">Docker</span><span class="card-category-list-count">1</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docker/%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/"><span class="card-category-list-name">基础概念</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">18</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="card-category-list-name">设计模式</span><span class="card-category-list-count">2</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Jenkins/"><span class="card-category-list-name">Jenkins</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">2</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/"><span class="card-category-list-name">基础概念</span><span class="card-category-list-count">2</span></a></li></ul></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Docker/" style="font-size: 1.1em; color: #999">Docker</a> <a href="/tags/JVM/" style="font-size: 1.33em; color: #99a2af">JVM</a> <a href="/tags/Java/" style="font-size: 1.44em; color: #99a7ba">Java</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/Linux/" style="font-size: 1.16em; color: #999b9e">Linux</a> <a href="/tags/MySQL/" style="font-size: 1.27em; color: #99a0a9">MySQL</a> <a href="/tags/MySQL%E5%A4%8D%E5%88%B6%E6%9C%BA%E5%88%B6/" style="font-size: 1.1em; color: #999">MySQL复制机制</a> <a href="/tags/No122/" style="font-size: 1.1em; color: #999">No122</a> <a href="/tags/No189/" style="font-size: 1.16em; color: #999b9e">No189</a> <a href="/tags/Pod/" style="font-size: 1.1em; color: #999">Pod</a> <a href="/tags/React/" style="font-size: 1.1em; color: #999">React</a> <a href="/tags/Redis/" style="font-size: 1.33em; color: #99a2af">Redis</a> <a href="/tags/dfs/" style="font-size: 1.1em; color: #999">dfs</a> <a href="/tags/hexo/" style="font-size: 1.21em; color: #999ea4">hexo</a> <a href="/tags/kubernetes/" style="font-size: 1.39em; color: #99a4b4">kubernetes</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 1.1em; color: #999">动态规划</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.27em; color: #99a0a9">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" style="font-size: 1.21em; color: #999ea4">数据结构和算法</a> <a href="/tags/%E6%95%B0%E7%BB%84%E7%BF%BB%E8%BD%AC/" style="font-size: 1.16em; color: #999b9e">数组翻转</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 1.27em; color: #99a0a9">框架</a> <a href="/tags/%E7%8E%AF%E7%8A%B6%E6%9B%BF%E6%8D%A2/" style="font-size: 1.16em; color: #999b9e">环状替换</a> <a href="/tags/%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/" style="font-size: 1.1em; color: #999">股票问题</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" style="font-size: 1.21em; color: #999ea4">设计原则</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.21em; color: #999ea4">设计模式</a> <a href="/tags/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" style="font-size: 1.1em; color: #999">贪心算法</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.5em; color: #99a9bf">面试</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">十一月 2021</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/10/"><span class="card-archive-list-date">十月 2021</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">九月 2021</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/05/"><span class="card-archive-list-date">五月 2021</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">88</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-08-26T16:00:00.000Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">181.5k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-07-03T11:30:31.635Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"><script>function subtitleType () {
+  if (false) { 
+    var typed = new Typed("#subtitle", {
+      strings: "一个人的命运啊&#44; 当然要靠自我奋斗&#44; 但是也要考虑到历史的行程。".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = '一个人的命运啊&#44; 当然要靠自我奋斗&#44; 但是也要考虑到历史的行程。'
+  }
+}
+
+if (false) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

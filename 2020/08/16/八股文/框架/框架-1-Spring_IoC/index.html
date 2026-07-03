@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>框架 - 1.Spring IoC | Vagrantの日常笔记</title><meta name="keywords" content="面试,框架"><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Spring IoC 11 Q1：IoC 是什么？ IoC 即控制反转，简单来说就是把原来代码里需要实现的对象创建、依赖反转给容器来帮忙实现，需要创建一个容器并且需要一种描述让容器知道要创建的对象间的关系，在 Spring 中管理对象及其依赖关系是通过 Spring 的 IoC 容器实现的。 IoC 的实现方式有依赖注入和依赖查找，由于依赖查找使用的很少，因此 IoC 也叫做依赖注入。依赖注入指对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="框架 - 1.Spring IoC">
+<meta property="og:url" content="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/%E6%A1%86%E6%9E%B6-1-Spring_IoC/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="Spring IoC 11 Q1：IoC 是什么？ IoC 即控制反转，简单来说就是把原来代码里需要实现的对象创建、依赖反转给容器来帮忙实现，需要创建一个容器并且需要一种描述让容器知道要创建的对象间的关系，在 Spring 中管理对象及其依赖关系是通过 Spring 的 IoC 容器实现的。 IoC 的实现方式有依赖注入和依赖查找，由于依赖查找使用的很少，因此 IoC 也叫做依赖注入。依赖注入指对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2020-08-16T09:31:03.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:28:02.900Z">
+<meta property="article:author" content="Vic Vagrant">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="框架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/%E6%A1%86%E6%9E%B6-1-Spring_IoC/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '框架 - 1.Spring IoC',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-02 10:28:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">框架 - 1.Spring IoC</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-08-16T09:31:03.000Z" title="发表于 2020-08-16 17:31:03">2020-08-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-02T02:28:02.900Z" title="更新于 2022-04-02 10:28:02">2022-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="框架 - 1.Spring IoC"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="Spring-IoC-11"><strong>Spring IoC 11</strong></h3>
+<h4 id="Q1：IoC-是什么？"><strong>Q1：IoC 是什么？</strong></h4>
+<p>IoC 即控制反转，简单来说就是把原来代码里需要实现的对象创建、依赖反转给容器来帮忙实现，需要创建一个容器并且需要一种描述让容器知道要创建的对象间的关系，在 Spring 中管理对象及其依赖关系是通过 Spring 的 IoC 容器实现的。</p>
+<p>IoC 的实现方式有依赖注入和依赖查找，由于依赖查找使用的很少，因此 IoC 也叫做依赖注入。依赖注入指对象被动地接受依赖类而不用自己主动去找，对象不是从容器中查找它依赖的类，而是在容器实例化对象时主动将它依赖的类注入给它。假设一个 Car 类需要一个 Engine 的对象，那么一般需要需要手动 new 一个 Engine，利用 IoC 就只需要定义一个私有的 Engine 类型的成员变量，容器会在运行时自动创建一个 Engine 的实例对象并将引用自动注入给成员变量。</p>
+<hr>
+<h4 id="Q2：IoC-容器初始化过程？"><strong>Q2：IoC 容器初始化过程？</strong></h4>
+<p><strong>基于 XML 的容器初始化</strong></p>
+<p>当创建一个 ClassPathXmlApplicationContext 时，构造方法做了两件事：</p>
+<p>① 调用父容器的构造方法为容器设置好 Bean 资源加载器。</p>
+<p>② 调用父类的 setConfigLocations 方法设置 Bean 配置信息的定位路径。</p>
+<p>ClassPathXmlApplicationContext 通过调用父类 AbstractApplicationContext 的 refresh 方法启动整个 IoC 容器对 Bean 定义的载入过程，refresh 是一个模板方法，规定了 IoC 容器的启动流程。在创建 IoC 容器前如果已有容器存在，需要把已有的容器销毁，保证在 refresh 方法后使用的是新创建的 IoC 容器。</p>
+<p>容器创建后通过 loadBeanDefinitions 方法加载 Bean 配置资源，该方法做两件事：</p>
+<p>① 调用资源加载器的方法获取要加载的资源。</p>
+<p>② 真正执行加载功能，由子类 XmlBeanDefinitionReader 实现。加载资源时首先解析配置文件路径，读取配置文件的内容，然后通过 XML 解析器将 Bean 配置信息转换成文档对象，之后按照 Spring Bean 的定义规则对文档对象进行解析。</p>
+<p>Spring IoC 容器中注册解析的 Bean 信息存放在一个 HashMap 集合中，key 是字符串，值是 BeanDefinition，注册过程中需要使用 synchronized 保证线程安全。当配置信息中配置的 Bean 被解析且被注册到 IoC 容器中后，初始化就算真正完成了，Bean 定义信息已经可以使用且可被检索。Spring IoC 容器的作用就是对这些注册的 Bean 定义信息进行处理和维护，注册的 Bean 定义信息是控制反转和依赖注入的基础。</p>
+<p><strong>基于注解的容器初始化</strong></p>
+<p>分为两种：</p>
+<p>① 直接将注解 Bean 注册到容器中，可以在初始化容器时注册，也可以在容器创建之后手动注册，然后刷新容器使其对注册的注解 Bean 进行处理。</p>
+<p>② 通过扫描指定的包及其子包的所有类处理，在初始化注解容器时指定要自动扫描的路径。</p>
+<hr>
+<h4 id="Q3：依赖注入的实现方法有哪些？"><strong>Q3：依赖注入的实现方法有哪些？</strong></h4>
+<p><strong>构造方法注入：</strong> IoC Service Provider 会检查被注入对象的构造方法，取得它所需要的依赖对象列表，进而为其注入相应的对象。这种方法的优点是在对象构造完成后就处于就绪状态，可以马上使用。缺点是当依赖对象较多时，构造方法的参数列表会比较长，构造方法无法被继承，无法设置默认值。对于非必需的依赖处理可能需要引入多个构造方法，参数数量的变动可能会造成维护的困难。</p>
+<p><strong>setter 方法注入：</strong> 当前对象只需要为其依赖对象对应的属性添加 setter 方法，就可以通过 setter 方法将依赖对象注入到被依赖对象中。setter 方法注入在描述性上要比构造方法注入强，并且可以被继承，允许设置默认值。缺点是无法在对象构造完成后马上进入就绪状态。</p>
+<p><strong>接口注入：</strong> 必须实现某个接口，接口提供方法来为其注入依赖对象。使用少，因为它强制要求被注入对象实现不必要接口，侵入性强。</p>
+<hr>
+<h4 id="Q4：依赖注入的相关注解？"><strong>Q4：依赖注入的相关注解？</strong></h4>
+<p>@Autowired：自动按类型注入，如果有多个匹配则按照指定 Bean 的 id 查找，查找不到会报错。</p>
+<p>@Qualifier：在自动按照类型注入的基础上再按照 Bean 的 id 注入，给变量注入时必须搭配 @Autowired，给方法注入时可单独使用。</p>
+<p>@Resource ：直接按照 Bean 的 id 注入，只能注入 Bean 类型。</p>
+<p>@Value ：用于注入基本数据类型和 String 类型。</p>
+<hr>
+<h4 id="Q5：依赖注入的过程？"><strong>Q5：依赖注入的过程？</strong></h4>
+<p>getBean 方法获取 Bean 实例，该方***调用 doGetBean ，doGetBean 真正实现从 IoC 容器获取 Bean 的功能，也是触发依赖注入的地方。</p>
+<p>具体创建 Bean 对象的过程由 ObjectFactory 的 createBean 完成，该方法主要通过 createBeanInstance 方法生成 Bean 包含的 Java 对象实例和 populateBean 方法对 Bean 属性的依赖注入进行处理。</p>
+<p>在 populateBean方法中，注入过程主要分为两种情况：① 属性值类型不需要强制转换时，不需要解析属性值，直接进行依赖注入。② 属性值类型需要强制转换时，首先解析属性值，然后对解析后的属性值进行依赖注入。依赖注入的过程就是将 Bean 对象实例设置到它所依赖的 Bean 对象属性上，真正的依赖注入是通过 setPropertyValues 方法实现的，该方法使用了委派模式。</p>
+<p>BeanWrapperImpl 类负责对完成初始化的 Bean 对象进行依赖注入，对于非集合类型属性，使用 JDK 反射，通过属性的 setter 方法为属性设置注入后的值。对于集合类型的属性，将属性值解析为目标类型的集合后直接赋值给属性。</p>
+<p>当容器对 Bean 的定位、载入、解析和依赖注入全部完成后就不再需要手动创建对象，IoC 容器会自动为我们创建对象并且注入依赖。</p>
+<hr>
+<h4 id="Q6：Bean-的生命周期？"><strong>Q6：Bean 的生命周期？</strong></h4>
+<p>在 IoC 容器的初始化过程中会对 Bean 定义完成资源定位，加载读取配置并解析，最后将解析的 Bean 信息放在一个 HashMap 集合中。当 IoC 容器初始化完成后，会进行对 Bean 实例的创建和依赖注入过程，注入对象依赖的各种属性值，在初始化时可以指定自定义的初始化方法。经过这一系列初始化操作后 Bean 达到可用状态，接下来就可以使用 Bean 了，当使用完成后会调用 destroy 方法进行销毁，此时也可以指定自定义的销毁方法，最终 Bean 被销毁且从容器中移除。</p>
+<p>XML 方式通过配置 bean 标签中的 init-Method 和 destory-Method 指定自定义初始化和销毁方法。</p>
+<p>注解方式通过 @PreConstruct 和 @PostConstruct 注解指定自定义初始化和销毁方法。</p>
+<hr>
+<h4 id="Q7：Bean-的作用范围？"><strong>Q7：Bean 的作用范围？</strong></h4>
+<p>通过 scope 属性指定 bean 的作用范围，包括：</p>
+<p>① singleton：单例模式，是默认作用域，不管收到多少 Bean 请求每个容器中只有一个唯一的 Bean 实例。</p>
+<p>② prototype：原型模式，和 singleton 相反，每次 Bean 请求都会创建一个新的实例。</p>
+<p>③ request：每次 HTTP 请求都会创建一个新的 Bean 并把它放到 request 域中，在请求完成后 Bean 会失效并被垃圾收集器回收。</p>
+<p>④ session：和 request 类似，确保每个 session 中有一个 Bean 实例，session 过期后 bean 会随之失效。</p>
+<p>⑤ global session：当应用部署在 Portlet 容器时，如果想让所有 Portlet 共用全局存储变量，那么该变量需要存储在 global session 中。</p>
+<hr>
+<h4 id="Q8：如何通过-XML-方式创建-Bean？"><strong>Q8：如何通过 XML 方式创建 Bean？</strong></h4>
+<p>默认无参构造方法，只需要指明 bean 标签中的 id 和 class 属性，如果没有无参构造方***报错。</p>
+<p>静态工厂方法，通过 bean 标签中的 class 属性指明静态工厂，factory-method 属性指明静态工厂方法。</p>
+<p>实例工厂方法，通过 bean 标签中的 factory-bean 属性指明实例工厂，factory-method 属性指明实例工厂方法。</p>
+<hr>
+<h4 id="Q9：如何通过注解创建-Bean？"><strong>Q9：如何通过注解创建 Bean？</strong></h4>
+<p>@Component 把当前类对象存入 Spring 容器中，相当于在 xml 中配置一个 bean 标签。value 属性指定 bean 的 id，默认使用当前类的首字母小写的类名。</p>
+<p>@Controller，@Service，@Repository 三个注解都是 @Component 的衍生注解，作用及属性都是一模一样的。只是提供了更加明确语义，@Controller 用于表现层，@Service用于业务层，@Repository用于持久层。如果注解中有且只有一个 value 属性要赋值时可以省略 value。</p>
+<p>如果想将第三方的类变成组件又没有源代码，也就没办法使用 @Component 进行自动配置，这种时候就要使用 @Bean 注解。被 @Bean 注解的方法返回值是一个对象，将会实例化，配置和初始化一个新对象并返回，这个对象由 Spring 的 IoC 容器管理。name 属性用于给当前 @Bean 注解方法创建的对象指定一个名称，即 bean 的 id。当使用注解配置方法时，如果方法有参数，Spring 会去容器查找是否有可用 bean对象，查找方式和 @Autowired 一样。</p>
+<hr>
+<h4 id="Q10：如何通过注解配置文件？"><strong>Q10：如何通过注解配置文件？</strong></h4>
+<p>@Configuration 用于指定当前类是一个 spring 配置类，当创建容器时会从该类上加载注解，value 属性用于指定配置类的字节码。</p>
+<p>@ComponentScan 用于指定 Spring 在初始化容器时要扫描的包。basePackages 属性用于指定要扫描的包。</p>
+<p>@PropertySource 用于加载 .properties 文件中的配置。value 属性用于指定文件位置，如果是在类路径下需要加上 classpath。</p>
+<p>@Import 用于导入其他配置类，在引入其他配置类时可以不用再写 @Configuration 注解。有 @Import 的是父配置类，引入的是子配置类。value 属性用于指定其他配置类的字节码。</p>
+<hr>
+<h4 id="Q11：BeanFactory、FactoryBean-和-ApplicationContext-的区别？"><strong>Q11：BeanFactory、FactoryBean 和 ApplicationContext 的区别？</strong></h4>
+<p>BeanFactory 是一个 Bean 工厂，使用简单工厂模式，是 Spring IoC 容器顶级接口，可以理解为含有 Bean 集合的工厂类，作用是管理 Bean，包括实例化、定位、配置对象及建立这些对象间的依赖。BeanFactory 实例化后并不会自动实例化 Bean，只有当 Bean 被使用时才实例化与装配依赖关系，属于延迟加载，适合多例模式。</p>
+<p>FactoryBean 是一个工厂 Bean，使用了工厂方法模式，作用是生产其他 Bean 实例，可以通过实现该接口，提供一个工厂方法来自定义实例化 Bean 的逻辑。FactoryBean 接口由 BeanFactory 中配置的对象实现，这些对象本身就是用于创建对象的工厂，如果一个 Bean 实现了这个接口，那么它就是创建对象的工厂 Bean，而不是 Bean 实例本身。</p>
+<p>ApplicationConext 是 BeanFactory 的子接口，扩展了 BeanFactory 的功能，提供了支持国际化的文本消息，统一的资源文件读取方式，事件传播以及应用层的特别配置等。容器会在初始化时对配置的 Bean 进行预实例化，Bean 的依赖注入在容器初始化时就已经完成，属于立即加载，适合单例模式，一般推荐使用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Vic Vagrant</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vagrantpoet.site/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/%E6%A1%86%E6%9E%B6-1-Spring_IoC/">https://vagrantpoet.site/2020/08/16/八股文/框架/框架-1-Spring_IoC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://vagrantpoet.site" target="_blank">Vagrantの日常笔记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a><a class="post-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/%E6%A1%86%E6%9E%B6-5-Mybatis/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">框架 - 5.Mybatis</div></div></a></div><div class="next-post pull-right"><a href="/2020/08/16/%E5%85%AB%E8%82%A1%E6%96%87/%E6%A1%86%E6%9E%B6/%E6%A1%86%E6%9E%B6-2-Spring_AOP/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">框架 - 2.Spring AOP</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/08/16/八股文/框架/框架-2-Spring_AOP/" title="框架 - 2.Spring AOP"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">框架 - 2.Spring AOP</div></div></a></div><div><a href="/2020/08/16/八股文/框架/框架-3-Spring_MVC/" title="框架 - 3.Spring MVC"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">框架 - 3.Spring MVC</div></div></a></div><div><a href="/2020/08/16/八股文/框架/框架-4-Spring_Data_JPA/" title="框架 - 4.Spring Data JPA"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">框架 - 4.Spring Data JPA</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-IoC-11"><span class="toc-number">1.</span> <span class="toc-text">Spring IoC 11</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q1%EF%BC%9AIoC-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">Q1：IoC 是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q2%EF%BC%9AIoC-%E5%AE%B9%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">Q2：IoC 容器初始化过程？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q3%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">Q3：依赖注入的实现方法有哪些？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q4%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E7%9B%B8%E5%85%B3%E6%B3%A8%E8%A7%A3%EF%BC%9F"><span class="toc-number">1.4.</span> <span class="toc-text">Q4：依赖注入的相关注解？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q5%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">Q5：依赖注入的过程？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q6%EF%BC%9ABean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9F"><span class="toc-number">1.6.</span> <span class="toc-text">Q6：Bean 的生命周期？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q7%EF%BC%9ABean-%E7%9A%84%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%EF%BC%9F"><span class="toc-number">1.7.</span> <span class="toc-text">Q7：Bean 的作用范围？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q8%EF%BC%9A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87-XML-%E6%96%B9%E5%BC%8F%E5%88%9B%E5%BB%BA-Bean%EF%BC%9F"><span class="toc-number">1.8.</span> <span class="toc-text">Q8：如何通过 XML 方式创建 Bean？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q9%EF%BC%9A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E5%88%9B%E5%BB%BA-Bean%EF%BC%9F"><span class="toc-number">1.9.</span> <span class="toc-text">Q9：如何通过注解创建 Bean？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q10%EF%BC%9A%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%9F"><span class="toc-number">1.10.</span> <span class="toc-text">Q10：如何通过注解配置文件？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q11%EF%BC%9ABeanFactory%E3%80%81FactoryBean-%E5%92%8C-ApplicationContext-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.11.</span> <span class="toc-text">Q11：BeanFactory、FactoryBean 和 ApplicationContext 的区别？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GC算法之 标记-压缩算法 | Vagrantの日常笔记</title><meta name="keywords" content="Java,面试"><meta name="author" content="Vic Vagrant"><meta name="copyright" content="Vic Vagrant"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="之前介绍了标记-清除和复制-清除两种最基本的GC算法，现在就介绍集这两种算法于一身的标记-压缩算法。 什么是GC标记-压缩算法？ GC标记-压缩算法由标记阶段和压缩阶段构成。 标记阶段和之前的标记-清除中提到的标记阶段完全一样，然后我们就通过遍历数次堆来进行压缩。这里的压缩指的就是复制-清除里面的把存活对象重新装填，使对象都紧挨在一起，从而避免内存碎片的产生，同时保证内存的高速分配。不过与GC复制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GC算法之 标记-压缩算法">
+<meta property="og:url" content="https://vagrantpoet.site/2020/03/17/Java/GC%E7%AE%97%E6%B3%95%E4%B9%8B%E4%B8%89_%E6%A0%87%E8%AE%B0-%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Vagrantの日常笔记">
+<meta property="og:description" content="之前介绍了标记-清除和复制-清除两种最基本的GC算法，现在就介绍集这两种算法于一身的标记-压缩算法。 什么是GC标记-压缩算法？ GC标记-压缩算法由标记阶段和压缩阶段构成。 标记阶段和之前的标记-清除中提到的标记阶段完全一样，然后我们就通过遍历数次堆来进行压缩。这里的压缩指的就是复制-清除里面的把存活对象重新装填，使对象都紧挨在一起，从而避免内存碎片的产生，同时保证内存的高速分配。不过与GC复制">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2020-03-17T00:17:03.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:28:02.890Z">
+<meta property="article:author" content="Vic Vagrant">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/2020/03/17/Java/GC%E7%AE%97%E6%B3%95%E4%B9%8B%E4%B8%89_%E6%A0%87%E8%AE%B0-%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic Vagrant","link":"链接: ","source":"来源: Vagrantの日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GC算法之 标记-压缩算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-02 10:28:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vagrantの日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GC算法之 标记-压缩算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-17T00:17:03.000Z" title="发表于 2020-03-17 08:17:03">2020-03-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-02T02:28:02.890Z" title="更新于 2022-04-02 10:28:02">2022-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="GC算法之 标记-压缩算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>之前介绍了<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51095294">标记-清除</a>和<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51133338">复制-清除</a>两种最基本的GC算法，现在就介绍集这两种算法于一身的标记-压缩算法。</p>
+<h2 id="什么是GC标记-压缩算法？">什么是GC标记-压缩算法？</h2>
+<p>GC标记-压缩算法由标记阶段和压缩阶段构成。</p>
+<p>标记阶段和之前的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51095294">标记-清除</a>中提到的标记阶段完全一样，然后我们就通过遍历数次堆来进行压缩。这里的压缩指的就是<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51133338">复制-清除</a>里面的把存活对象重新装填，使对象都紧挨在一起，从而避免内存碎片的产生，同时保证内存的高速分配。不过与GC复制算法不同的是，标记-压缩不需要牺牲额外的空间。</p>
+<h2 id="Lisp2算法">Lisp2算法</h2>
+<p>提到标记-压缩就不得不提著名的计算机学家<a href="https://link.zhihu.com/?target=https%3A//baike.baidu.com/item/%25E5%2594%2590%25E7%25BA%25B3%25E5%25BE%25B7%25C2%25B7%25E5%2585%258B%25E5%258A%25AA%25E7%2589%25B9/1436781%3Ffr%3Daladdin">Donald E. Knuth</a>发明的Lisp2算法。</p>
+<p>在详细介绍算法之前我们先了解一下这个算法结构中的对象结构。</p>
+<p><img src="image/v2-5d2b2fb297c6419a2f5430e06af1407f_r.jpg" alt="v2-5d2b2fb297c6419a2f5430e06af1407f_r.jpg"></p>
+<p>Lisp2 算法中的对象</p>
+<p>Lisp2在对象头里面会预留一个叫forwarding的指针，这个指针和<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51133338">复制-清除</a>里面forwarding的用法一样指向GC后对象新的内存空间。这里提前说明一点就是forwarding不为空就表示该对象并没有移动完毕。</p>
+<h2 id="Lisp2算法的GC过程">Lisp2算法的GC过程</h2>
+<p>初始状态</p>
+<p><img src="image/v2-61d79bc9bd535686c462538de12490a5_r.jpg" alt="v2-61d79bc9bd535686c462538de12490a5_r.jpg"></p>
+<p>初始状态</p>
+<p>从GC Roots出发，标记活动对象</p>
+<p><img src="image/v2-934136557ed9871a57716d5bf1e36ddb_r.jpg" alt="v2-934136557ed9871a57716d5bf1e36ddb_r.jpg"></p>
+<p>标记阶段结束后</p>
+<p>进行压缩</p>
+<p><img src="image/v2-45219f19e96403388655d2bab1d8c6bb_r.jpg" alt="v2-45219f19e96403388655d2bab1d8c6bb_r.jpg"></p>
+<p>压缩阶段结束后</p>
+<p>通过图我们知道活动对象B、C、D、F分别对应B’、C’、D’、F’。所以Lisp2算法并不会改变对象原本的排序顺序，只是把缩小对象间的间隙，然后聚集到一端。</p>
+<p>整个压缩阶段用伪代码的话，如下表示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">compaction_phase()&#123;</span><br><span class="line">         set_forwarding_ptr(); //设定forwarding 指针</span><br><span class="line">         adjust_ptr(); //更新指针</span><br><span class="line">         move_obj(); //移动对象</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如代码所示整个阶段分为三个步骤</p>
+<p>1、设定forwarding指针</p>
+<p>2、更新指针</p>
+<p>3、移动对象</p>
+<p>对于步骤1，程序会搜索整个堆，给活动对象设定forwarding指针</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void set_forwarding_ptr() &#123;</span><br><span class="line">     scan = new_address = $heap_start;</span><br><span class="line">     while (scan &lt; $heap_end)</span><br><span class="line">         if (scan.mark == TRUE)</span><br><span class="line">             scan.forwarding = new_address;</span><br><span class="line">             new_address += scan.size;</span><br><span class="line">     scan += scan.size;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>scan是用来遍历堆中对象的指针，new_address是指向目标对象的指针，这两个指针在后续的操作中是很重要的。当scan指针找到活动对象时，就会令对象的forwarding指针指向newaddress,然后将new_address按对象长度移动。遍历完整个堆后堆的状态就会变成</p>
+<p><img src="image/v2-9f9e90daa1553ad0dcfaaa253a06f5d8_r.jpg" alt="v2-9f9e90daa1553ad0dcfaaa253a06f5d8_r.jpg"></p>
+<p>set_forwarding_ptr函数执行完毕之后</p>
+<p>设置好forwarding之后，接下来我们做的是并不是马上移动对象而是先更新对象的指针adjust_ptr()。这是因为GC标记-压缩算法中新空间和原空间是同一个空间，所以有可能出现先移动的对象把还没有来得及移动的对象覆盖掉的情况。另外我们还需要记录各对象之间引用关系，找到对象GC后的目标地址。所以在移动对象前，我们先把活动对象的指针全部更新到预计的位置，这样一来，之后只要移动对象，GC就结束了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">adjust_ptr()&#123;</span><br><span class="line">        for(r : $roots)</span><br><span class="line">            *r = (*r).forwarding;</span><br><span class="line"></span><br><span class="line">        scan = $heap_start;</span><br><span class="line">        while(scan &lt; $heap_end)</span><br><span class="line">            if(scan.mark == TRUE)</span><br><span class="line">                for(child : children(scan))</span><br><span class="line">                    *child = (*child).forwarding;</span><br><span class="line">        scan += scan.size</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>adjust_ptr()第一步是重写roots结点的指针，后面才重写所有活动对象的指针。注意这已经第二次对整个堆执行搜索了。函数执行完毕后，堆的状态如下</p>
+<p><img src="image/v2-0c8708eb9e46957728e644067dbc5268_r.jpg" alt="v2-0c8708eb9e46957728e644067dbc5268_r.jpg"></p>
+<p>adjust_ptr()执行后</p>
+<p>最后一步搜索整个堆，将活动对象移动到forwarding指针的引用目标处。需要注意的是这已经是第三次搜索整个堆了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">move_obj()&#123;</span><br><span class="line">       scan = $free = $heap_start;</span><br><span class="line">       while(scan &lt; $heap_end)</span><br><span class="line">           if(scan.mark == TRUE)</span><br><span class="line">               new_address = scan.forwarding;</span><br><span class="line">               copy_data(new_address, scan, scan.size);</span><br><span class="line">               new_address.forwarding = NULL;</span><br><span class="line">               new_address.mark = FALSE;</span><br><span class="line">               $free += new_address.size;</span><br><span class="line">               scan += scan.size;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的逻辑就比较简单，搜索堆找到活动对象时，就把对象复制到forwarding指针指向的地址，然后把forwarding置NULL,后清除mark标记。</p>
+<p><img src="image/v2-c65d151986ca84d87c037cc81dd33b79_r.jpg" alt="v2-c65d151986ca84d87c037cc81dd33b79_r.jpg"></p>
+<p>move_obj()函数执行完毕后</p>
+<p>介绍完Lisp2算法整个流程之后，我们再回来分析一下算法的优缺点。</p>
+<p>优点： 可有效利用堆。相对于GC<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51133338">复制-清除</a>，GC标记-压缩不会空出一个To空间，是利用了整个堆。相对于GC<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51095294">标记-清除</a>，GC标记-压缩对活动对象进行了压缩，不存在碎片化的问题，所以有效率利用率高。</p>
+<p>缺点：压缩花费计算成本大。为了对活动对象进行压缩，我们看到Lisp2的压缩过程必须进行三次堆搜索。堆搜索的花费时间是和堆的大小成正比的，所以GC标记-压缩算法的吞吐量要劣于其它算法。在GC<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51095294">标记-清除</a>算法中，清除阶段也要搜索整个堆，不过搜索一次就够了。但GC标记-压缩要搜索三次，这样就要花费大约三倍的时间，这是一个相当巨大的缺陷，特别是堆越大，所消耗的成本也越大。</p>
+<p>所以后面有人就提出了另外一种算法Two-Finger算法</p>
+<h2 id="Two-Finger算法">Two-Finger算法</h2>
+<p>Two-Finger 是由Robert A. Saunders 研究出来的一种高效算法，具体来说就只需要搜索二次堆就可以了。</p>
+<h2 id="算法前提">算法前提</h2>
+<p>Two-Finger算法有一个很大的限制条件就是，所有的对象大小必须整理成一致。之前介绍的所有算法都没有这种限制。另外与Lisp2不同的是Two-Finger中的对象头不需要设置forwarding指针。</p>
+<h2 id="概要">概要</h2>
+<p>Two-Finger算法首先也要标记活动对象，标记过程与其它算法一样。不同之处在于Two-Finger的压缩阶段只有以下两个步骤。</p>
+<p>1、移动对象</p>
+<p>2、更新指针</p>
+<p>算法的一大特征移动对象</p>
+<p><img src="image/v2-420889b15d6324cc9444c1f0b2626b00_r.jpg" alt="v2-420889b15d6324cc9444c1f0b2626b00_r.jpg"></p>
+<p>Two-Finger算法中的对象移动</p>
+<p>从图中我们看到与Lisp2算法不同的是Two-Finger是通过移动对象来填补空白处来去进行压缩，而Lisp2是整体向左移动。也正是为了让对象能够恰好填补空间，所以必须让所有对象大小一致！</p>
+<p>下面来看具体每个步骤的细节</p>
+<p>步骤一 移动对象</p>
+<p>首先定义两个指针$free、live，从两边向中间搜索。我们可以把这两个指针当作手指，所以我们把它叫做Two-Finger。</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>e</mi><mi>e</mi><mtext>是用于寻找非活动对象的指针，</mtext><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mtext>指针是用于活动对象的指针。堆以及</mtext></mrow><annotation encoding="application/x-tex">free是用于寻找非活动对象的指针，live指针是用于活动对象的指针。堆以及</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ee</span><span class="mord cjk_fallback">是用于寻找非活动对象的指针，</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">e</span><span class="mord cjk_fallback">指针是用于活动对象的指针。堆以及</span></span></span></span>free和live的初始化状态如图：</p>
+<p><img src="image/v2-01f7c8a397180d93894845f356be6c57_r.jpg" alt="v2-01f7c8a397180d93894845f356be6c57_r.jpg"></p>
+<p>堆和两个指针的初始状态</p>
+<p>当两个指针发现目标空间和原空间对象时会移动对象，移动过程如下</p>
+<p><img src="image/v2-87fc45e32a06cff6ce9952ee8b2179b0_r.jpg" alt="v2-87fc45e32a06cff6ce9952ee8b2179b0_r.jpg"></p>
+<p>移动对象</p>
+<p>定义move_obj()函数，描述整个移动过程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">move_obj()&#123;</span><br><span class="line">        $free = $heap_start;</span><br><span class="line">        live = $heap_end - OBJ_SIZE;</span><br><span class="line">        while(TRUE)</span><br><span class="line">            while($free.mark == TRUE)</span><br><span class="line">                $free += OBJ_SIZE;</span><br><span class="line">            while(live.mark == FALSE)  </span><br><span class="line">                live -= OBJ_SIZE;</span><br><span class="line">            if($free &lt; live)</span><br><span class="line">                copy_data($free, live, OBJ_SIZE)</span><br><span class="line">                live.forwarding = $free; //记录新目标地址，更新时用       </span><br><span class="line">                live.mark = FALSE;</span><br><span class="line">            else </span><br><span class="line">                break;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>因为对象大小一致，所以设其大小为OBJSIZE，free指针从左\(heapstart)开始向右搜索堆，另一方面live指针从右($heap_end-OBJ_SIZE)开始向左搜索。</p>
+<p>对于活动对象<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>e</mi><mi>e</mi><mtext>是直接跳过，对于非活动对象</mtext><mi>l</mi><mi>i</mi><mi>v</mi><mi>e</mi><mtext>指针直接跳过。当</mtext></mrow><annotation encoding="application/x-tex">free是直接跳过，对于非活动对象live指针直接跳过。当</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ee</span><span class="mord cjk_fallback">是直接跳过，对于非活动对象</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">e</span><span class="mord cjk_fallback">指针直接跳过。当</span></span></span></span>free和live碰撞时就表示整个堆搜索完毕了，对象也就移动完成了。</p>
+<p>步骤二 更新指针</p>
+<p>步骤一执行后，活动对象都压缩在一起了。但对象指针还没有更新，所以下面我们要更新对象的指针。</p>
+<p><img src="image/v2-31fcae770316c38e400fd90d813dcb84_r.jpg" alt="v2-31fcae770316c38e400fd90d813dcb84_r.jpg"></p>
+<p>对象移动结束后</p>
+<p>当对象移动结束时，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>e</mi><mi>e</mi><mtext>指针指向分块的开头，这时位于</mtext></mrow><annotation encoding="application/x-tex">free指针指向分块的开头，这时位于</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ee</span><span class="mord cjk_fallback">指针指向分块的开头，这时位于</span></span></span></span>free指针右边的是以下两者对象</p>
+<ul>
+<li>• 非活动对象</li>
+<li>• 移动前对象</li>
+</ul>
+<p>因此，指向$free指针右边地址的指针引用的是移动前的对象，基于这点我们来看看adust_ptr()函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">adjust_ptr()&#123;</span><br><span class="line">         for(r : $roots)</span><br><span class="line">             if(*r &gt;= $free)</span><br><span class="line">                 *r = (*r).forwarding</span><br><span class="line"></span><br><span class="line">         scan = $heap_start;</span><br><span class="line">         while(scan &lt; $free)</span><br><span class="line">             scan.mark = FALSE;</span><br><span class="line">             for(child : children(scan))</span><br><span class="line">                 if(*child &gt;= $free)</span><br><span class="line">                     *child = (*child).forwarding;</span><br><span class="line">             scan += OBJ_SIZE;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中我们看出第一步更新GC roots指针</p>
+<p>又因为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>r</mi><mi>e</mi><mi>e</mi><mtext>的左边都是活动对象，所以这时只要遍历</mtext></mrow><annotation encoding="application/x-tex">free的左边都是活动对象，所以这时只要遍历</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ee</span><span class="mord cjk_fallback">的左边都是活动对象，所以这时只要遍历</span></span></span></span>free左边所有的对象并依次更新对象即可。</p>
+<p>优点：</p>
+<p>Lisp2 算法要事先确保每个对象都留有 1 个字用于 forwarding 指针，这就压迫了堆。然而 因为 Two-Finger 算法能把 forwarding 指针设置在移动前的对象的域里，所以不需要额外的内存 空间以用于 forwarding 指针，因此在内存的使用效率上，该算法要比 Lisp2 算法的使用效率高。</p>
+<p>此外，在 Two-Finger 算法中，压缩所带来的搜索次数只有 2 次，比 Lisp2 算法少 1 次， 在吞吐量方面占优势</p>
+<p>缺点：</p>
+<p>Two-Finger不像GC<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51133338">复制-清除</a>算法，将具有引用关系的对象安排在堆中较近的 位置能够通过缓存来提高访问速度。Two-Finger 算法则不考虑对象间的引用关系， 一律对其进行压缩，结果就导致对象的顺序在压缩前后产生了巨大的变化。因此，基本 上也无法期待这个算法能沾缓存的光。</p>
+<p>此外该算法还有一个限制条件，那就是所有对象的大小必须一致。因为能消除这个限制 的处理系统不太多，所以这点制约了 Two-Finger 算法的应用范围 。</p>
+<p>关于GC标记-压缩算法的概念和实现就暂介绍这了，希望对大家GC这块有所帮助和收获。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Vic Vagrant</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vagrantpoet.site/2020/03/17/Java/GC%E7%AE%97%E6%B3%95%E4%B9%8B%E4%B8%89_%E6%A0%87%E8%AE%B0-%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95/">https://vagrantpoet.site/2020/03/17/Java/GC算法之三_标记-压缩算法/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://vagrantpoet.site" target="_blank">Vagrantの日常笔记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/17/Java/JVM/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JVM</div></div></a></div><div class="next-post pull-right"><a href="/2020/05/17/Java/synchronized%E4%B8%8ELock%E7%9A%84%E5%8C%BA%E5%88%AB/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">synchronized与Lock的区别</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/05/20/Java/ABA问题产生及解决方案/" title="ABA问题产生及解决方案"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">ABA问题产生及解决方案</div></div></a></div><div><a href="/2020/07/26/Java/CGLIB和Java动态代理的区别/" title="CGLIB和Java动态代理的区别"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">CGLIB和Java动态代理的区别</div></div></a></div><div><a href="/2019/05/14/Java/HashMap-ConcurrentHashMap/" title="HashMap? ConcurrentHashMap? 相信看完这篇没人能难住你！"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2022-04-02</div><div class="title">HashMap? ConcurrentHashMap? 相信看完这篇没人能难住你！</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic Vagrant</div><div class="author-info__description">欲速则不达</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">88</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">印象笔记搬运中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFGC%E6%A0%87%E8%AE%B0-%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">什么是GC标记-压缩算法？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lisp2%E7%AE%97%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">Lisp2算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lisp2%E7%AE%97%E6%B3%95%E7%9A%84GC%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">Lisp2算法的GC过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Finger%E7%AE%97%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">Two-Finger算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90"><span class="toc-number">5.</span> <span class="toc-text">算法前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A6%81"><span class="toc-number">6.</span> <span class="toc-text">概要</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%85%A5pod/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.901Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/04/02/Spring%20AOP%20-%20@Pointcut%E6%95%B4%E7%90%86/" title="无题">无题</a><time datetime="2022-04-02T02:28:02.894Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM常量池总结"/></a><div class="content"><a class="title" href="/2022/04/02/Java/JVM%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%80%BB%E7%BB%93/" title="JVM常量池总结">JVM常量池总结</a><time datetime="2022-04-02T02:28:02.891Z" title="发表于 2022-04-02 10:28:02">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Pod 的实现原理"/></a><div class="content"><a class="title" href="/2022/03/20/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/Pod%20%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Pod 的实现原理">Pod 的实现原理</a><time datetime="2022-03-20T02:00:00.000Z" title="发表于 2022-03-20 10:00:00">2022-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一个容器化应用"/></a><div class="content"><a class="title" href="/2022/03/18/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90kubernetes%EF%BC%88%E4%B9%A6%E7%B1%8D%EF%BC%89%E7%AC%94%E8%AE%B0/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%8C%96%E5%BA%94%E7%94%A8/" title="第一个容器化应用">第一个容器化应用</a><time datetime="2022-03-18T14:06:00.000Z" title="发表于 2022-03-18 22:06:00">2022-03-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic Vagrant</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
