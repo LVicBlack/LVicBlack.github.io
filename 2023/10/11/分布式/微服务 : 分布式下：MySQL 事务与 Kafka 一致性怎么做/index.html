@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微服务 / 分布式下：MySQL 事务与 Kafka 一致性怎么做 | Vic 日常笔记</title><meta name="keywords" content="一致性"><meta name="author" content="Vic"><meta name="copyright" content="Vic"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="微服务 &#x2F; 分布式下：MySQL 事务与 Kafka 一致性怎么做？ 在微服务 &#x2F; 分布式系统里，“MySQL 本地事务 + 发送 Kafka 消息” 无法做到真正原子性。经典事故就是：  事务里先写库，再发 Kafka；结果 Kafka 发出去了，但 MySQL 事务回滚，下游服务收到消息后做了不可逆操作（发货 &#x2F; 加余额 &#x2F; 发券），系统直接不一致。  工程上通常不建议上 2PC&#x2F;XA 这种强">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务 &#x2F; 分布式下：MySQL 事务与 Kafka 一致性怎么做">
+<meta property="og:url" content="https://vagrantpoet.site/2023/10/11/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%BE%AE%E6%9C%8D%E5%8A%A1%20:%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8B%EF%BC%9AMySQL%20%E4%BA%8B%E5%8A%A1%E4%B8%8E%20Kafka%20%E4%B8%80%E8%87%B4%E6%80%A7%E6%80%8E%E4%B9%88%E5%81%9A/index.html">
+<meta property="og:site_name" content="Vic 日常笔记">
+<meta property="og:description" content="微服务 &#x2F; 分布式下：MySQL 事务与 Kafka 一致性怎么做？ 在微服务 &#x2F; 分布式系统里，“MySQL 本地事务 + 发送 Kafka 消息” 无法做到真正原子性。经典事故就是：  事务里先写库，再发 Kafka；结果 Kafka 发出去了，但 MySQL 事务回滚，下游服务收到消息后做了不可逆操作（发货 &#x2F; 加余额 &#x2F; 发券），系统直接不一致。  工程上通常不建议上 2PC&#x2F;XA 这种强">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2023-10-11T08:06:00.000Z">
+<meta property="article:modified_time" content="2026-07-04T06:29:36.810Z">
+<meta property="article:author" content="Vic">
+<meta property="article:tag" content="一致性">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vagrantpoet.site/2023/10/11/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%BE%AE%E6%9C%8D%E5%8A%A1%20:%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8B%EF%BC%9AMySQL%20%E4%BA%8B%E5%8A%A1%E4%B8%8E%20Kafka%20%E4%B8%80%E8%87%B4%E6%80%A7%E6%80%8E%E4%B9%88%E5%81%9A/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Vic","link":"链接: ","source":"来源: Vic 日常笔记","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '微服务 / 分布式下：MySQL 事务与 Kafka 一致性怎么做',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-04 14:29:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">104</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">44</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Vic 日常笔记</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">微服务 / 分布式下：MySQL 事务与 Kafka 一致性怎么做</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-11T08:06:00.000Z" title="发表于 2023-10-11 16:06:00">2023-10-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-04T06:29:36.810Z" title="更新于 2026-07-04 14:29:36">2026-07-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%B8%80%E8%87%B4%E6%80%A7/">一致性</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="微服务 / 分布式下：MySQL 事务与 Kafka 一致性怎么做"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="微服务-分布式下：MySQL-事务与-Kafka-一致性怎么做？">微服务 / 分布式下：MySQL 事务与 Kafka 一致性怎么做？</h2>
+<p>在微服务 / 分布式系统里，<strong>“MySQL 本地事务 + 发送 Kafka 消息” 无法做到真正原子性</strong>。经典事故就是：</p>
+<blockquote>
+<p>事务里先写库，再发 Kafka；结果 <strong>Kafka 发出去了，但 MySQL 事务回滚</strong>，下游服务收到消息后做了不可逆操作（发货 / 加余额 / 发券），系统直接不一致。</p>
+</blockquote>
+<p>工程上通常不建议上 2PC/XA 这种强一致方案（复杂、性能差、链路脆弱）。主流做法是：<br>
+<strong>用可恢复的最终一致（Eventual Consistency）替代强一致。</strong></p>
+<p>本文基于 <strong>Kafka + Go + MySQL + Redis</strong> 给出一套支付 / 订单通用、可落地的方案：<br>
+<strong>Transactional Outbox（本地消息表）+ 至少一次投递 + 消费端幂等</strong>，并补充 Kafka 工程化配置、顺序性、重试 / DLQ、以及 CDC（Debezium）升级方案。</p>
+<h3 id="1-为什么-“事务里直接发-Kafka”-会出事？">1. 为什么 “事务里直接发 Kafka” 会出事？</h3>
+<p>反例（不要这么做）：</p>
+<ol>
+<li><code>BEGIN;</code></li>
+<li>更新订单、支付记录等</li>
+<li><strong>发送 Kafka 消息（这一步不受 MySQL 事务控制）</strong></li>
+<li><code>ROLLBACK;</code></li>
+</ol>
+<p>此时消息已经被下游消费，但数据库事务回滚，出现：</p>
+<ul>
+<li>下游：认为订单已支付 -&gt; 发货 / 发券 / 加余额</li>
+<li>上游：订单仍未支付（因为回滚）</li>
+<li><strong>业务不可逆，无法简单回滚</strong></li>
+</ul>
+<blockquote>
+<p>即便 Kafka 支持幂等生产者、事务（EOS），也只能保证 <strong>Kafka 内部</strong> 的一致性（producer → broker → consumer offset），<strong>不能把 MySQL 事务也纳入同一个原子提交</strong>。所以跨系统一致性仍需要 Outbox / CDC / Saga 这类模式。</p>
+</blockquote>
+<h3 id="2-核心原则：先保证-“落库-可追溯”，再异步投递">2. 核心原则：先保证 “落库 + 可追溯”，再异步投递</h3>
+<p>在分布式系统里更可靠的思路是：</p>
+<ul>
+<li><strong>“数据写成功” 与 “消息可重放” 必须绑定在同一个本地事务里</strong></li>
+<li>消息投递失败要可重试、可告警、可补偿</li>
+<li>Kafka 投递采用 <strong>至少一次</strong>（At-least-once），所以消费者必须 <strong>幂等</strong></li>
+</ul>
+<h3 id="3-最推荐方案：Transactional-Outbox（本地消息表）">3. 最推荐方案：Transactional Outbox（本地消息表）</h3>
+<h4 id="3-1-方案描述（强烈推荐，支付-订单通用）">3.1 方案描述（强烈推荐，支付 / 订单通用）</h4>
+<p><strong>同一个 MySQL 事务里同时做两件事：</strong></p>
+<ol>
+<li>写业务数据（订单、支付状态）</li>
+<li>写 outbox 表（待发送事件）</li>
+</ol>
+<p>事务提交后，由后台投递器把 outbox 里的事件发送到 Kafka：</p>
+<ul>
+<li>发成功：标记 outbox 为 <code>SENT</code></li>
+<li>发失败：重试（指数退避），最终进入死信 / 告警</li>
+</ul>
+<h4 id="3-2-为什么-Outbox-能解决-“Kafka-发了但事务回滚”？">3.2 为什么 Outbox 能解决 “Kafka 发了但事务回滚”？</h4>
+<p>因为消息<strong>不是在事务里直接发 Kafka</strong>，而是写一条 outbox 记录：</p>
+<ul>
+<li>事务回滚 =&gt; outbox 记录不存在 =&gt; 投递器不会投递 =&gt; 下游不会收到消息</li>
+<li>事务提交 =&gt; outbox 记录落库 =&gt; 即使服务宕机也可以恢复投递（消息可追溯）</li>
+</ul>
+<h3 id="4-Outbox-表设计建议（MySQL-示例）">4. Outbox 表设计建议（MySQL 示例）</h3>
+<blockquote>
+<p>表结构按需调整，核心是：可重试、可去重、可观测</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE message_outbox (</span><br><span class="line">  id              CHAR(36) PRIMARY KEY,</span><br><span class="line">  biz_key         VARCHAR(64) NOT NULL,          -- 业务主键，如 order_id</span><br><span class="line">  event_type      VARCHAR(64) NOT NULL,          -- 事件类型，如 PaymentSucceeded</span><br><span class="line">  topic           VARCHAR(128) NOT NULL,         -- Kafka topic（可选：也可由 event_type 映射）</span><br><span class="line">  msg_key         VARCHAR(128) NOT NULL,         -- Kafka message key（建议 order_id）</span><br><span class="line">  payload         JSON NOT NULL,                 -- 事件内容</span><br><span class="line">  headers         JSON NULL,                     -- Kafka headers（可选）</span><br><span class="line">  status          VARCHAR(16) NOT NULL,          -- NEW / SENDING / SENT / FAILED</span><br><span class="line">  retry_count     INT NOT NULL DEFAULT 0,</span><br><span class="line">  next_retry_at   DATETIME NULL,</span><br><span class="line">  last_error      TEXT NULL,</span><br><span class="line">  created_at      DATETIME NOT NULL,</span><br><span class="line">  updated_at      DATETIME NOT NULL,</span><br><span class="line">  UNIQUE KEY uk_biz_event (biz_key, event_type), -- 防止同一事件重复写入（可选）</span><br><span class="line">  KEY idx_status_retry (status, next_retry_at),</span><br><span class="line">  KEY idx_biz (biz_key)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><strong>关键字段说明：</strong></p>
+<ul>
+<li><code>msg_key</code>：Kafka 分区 key（强烈建议用 <code>order_id</code>），用于<strong>同订单的消息顺序性</strong></li>
+<li><code>headers</code>：建议携带 <code>message_id</code>/<code>trace_id</code>/<code>idempotency_key</code>/<code>schema_version</code> 等</li>
+<li><code>uk_biz_event</code>：可选唯一键，避免重复写 outbox（视业务而定）</li>
+</ul>
+<h3 id="5-Kafka-侧的工程化建议（非常重要）">5. Kafka 侧的工程化建议（非常重要）</h3>
+<h4 id="5-1-Topic-分区-顺序性">5.1 Topic / 分区 / 顺序性</h4>
+<ul>
+<li><strong>同一个订单内的事件要保持顺序</strong>：生产消息时 <code>key = order_id</code>，Kafka 保证同 key 的消息落在同分区（从而分区内有序）。</li>
+<li>分区数量：按吞吐与扩展预估设置（后续扩容会带来重分区与 key 映射变化，需要谨慎评估）。</li>
+</ul>
+<h4 id="5-2-Producer（Go）建议配置">5.2 Producer（Go）建议配置</h4>
+<p>目标：减少丢失、减少乱序、提升可观测性。</p>
+<ul>
+<li><code>acks=all</code></li>
+<li>合理 <code>retries</code> + <code>retry.backoff</code></li>
+<li>开启 <strong>幂等生产者</strong>（Kafka 客户端 / 库支持时）：可降低 “网络抖动导致的重复写入”</li>
+<li>消息体：携带 <code>message_id</code>（UUID / 雪花），用于消费端幂等</li>
+</ul>
+<blockquote>
+<p>注意：幂等生产者 ≠ 跨 MySQL 一致性；它只能减少 Kafka 内部重复。</p>
+</blockquote>
+<h4 id="5-3-Consumer（Go）建议配置与提交时机">5.3 Consumer（Go）建议配置与提交时机</h4>
+<ul>
+<li><strong>手动提交 offset</strong>（不要 auto-commit）</li>
+<li>提交顺序：<strong>先完成业务处理（含幂等写入）再提交 offset</strong>
+<ul>
+<li>否则可能 “先提交 offset 后宕机”，导致消息丢处理</li>
+</ul>
+</li>
+<li>处理要支持重放：重复消费不产生副作用（见第 7 章）</li>
+</ul>
+<h3 id="6-投递器（Outbox-Dispatcher）在-Go-中怎么做？">6. 投递器（Outbox Dispatcher）在 Go 中怎么做？</h3>
+<h4 id="6-1-投递流程">6.1 投递流程</h4>
+<ul>
+<li>定时（或常驻 worker）扫描 <code>NEW/FAILED</code> 且 <code>next_retry_at &lt;= now()</code> 的记录</li>
+<li>按批次取出，标记 <code>SENDING</code>（防止多实例重复投递）</li>
+<li>发送到 Kafka</li>
+<li>成功 -&gt; <code>SENT</code></li>
+<li>失败 -&gt; <code>FAILED</code>，计算下一次 <code>next_retry_at</code>，<code>retry_count++</code>，记录 <code>last_error</code></li>
+</ul>
+<h4 id="6-2-多实例并发抢占（MySQL-8-推荐）">6.2 多实例并发抢占（MySQL 8 推荐）</h4>
+<p>MySQL 8 可用：</p>
+<ul>
+<li><code>SELECT ... FOR UPDATE SKIP LOCKED</code>：多实例并发扫描不会互相阻塞，天然 “抢任务”。</li>
+</ul>
+<p>示意 SQL（根据你的字段调整）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">BEGIN;</span><br><span class="line"></span><br><span class="line">SELECT id, topic, msg_key, payload, headers</span><br><span class="line">FROM message_outbox</span><br><span class="line">WHERE status IN (&#x27;NEW&#x27;,&#x27;FAILED&#x27;)</span><br><span class="line">  AND (next_retry_at IS NULL OR next_retry_at &lt;= NOW())</span><br><span class="line">ORDER BY created_at</span><br><span class="line">LIMIT 200</span><br><span class="line">FOR UPDATE SKIP LOCKED;</span><br><span class="line"></span><br><span class="line">-- 将选中的记录置为 SENDING（同一事务内）</span><br><span class="line">UPDATE message_outbox</span><br><span class="line">SET status=&#x27;SENDING&#x27;, updated_at=NOW()</span><br><span class="line">WHERE id IN (...);</span><br><span class="line"></span><br><span class="line">COMMIT;</span><br></pre></td></tr></table></figure>
+<h4 id="6-3-发送到-Kafka-成功后更新状态">6.3 发送到 Kafka 成功后更新状态</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE message_outbox</span><br><span class="line">SET status=&#x27;SENT&#x27;, updated_at=NOW()</span><br><span class="line">WHERE id=? AND status=&#x27;SENDING&#x27;;</span><br></pre></td></tr></table></figure>
+<p>失败则：</p>
+<ul>
+<li><code>status='FAILED'</code></li>
+<li><code>retry_count=retry_count+1</code></li>
+<li><code>next_retry_at=NOW()+退避时间</code></li>
+<li><code>last_error=...</code></li>
+</ul>
+<h3 id="7-消费端必须幂等（Kafka-至少一次投递的代价）">7. 消费端必须幂等（Kafka 至少一次投递的代价）</h3>
+<p>Kafka + 重试 + rebalance + 网络抖动 =&gt; <strong>重复消费非常正常</strong>。<br>
+所以消费者必须做到：<strong>重复消息不会造成重复副作用</strong>。</p>
+<h4 id="7-1-幂等实现方式-A：MySQL-去重表（最可靠）">7.1 幂等实现方式 A：MySQL 去重表（最可靠）</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE consume_log (</span><br><span class="line">  message_id   CHAR(36) PRIMARY KEY,</span><br><span class="line">  consumed_at  DATETIME NOT NULL,</span><br><span class="line">  biz_key      VARCHAR(64) NULL,</span><br><span class="line">  event_type   VARCHAR(64) NULL</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>消费流程（建议包在同一个本地事务里）：</p>
+<ol>
+<li><code>INSERT INTO consume_log(message_id, consumed_at, biz_key, event_type) VALUES (...)</code></li>
+<li>插入成功 =&gt; 执行业务 =&gt; COMMIT =&gt; 再提交 offset</li>
+<li>主键冲突 =&gt; 说明已处理过 =&gt; 直接提交 offset</li>
+</ol>
+<p><strong>优点：</strong> 强一致、可审计、重放友好<br>
+<strong>缺点：</strong> 需要额外表写入（但一般可接受）</p>
+<h4 id="7-2-幂等实现方式-B：Redis-幂等（更快，但要处理过期与一致性）">7.2 幂等实现方式 B：Redis 幂等（更快，但要处理过期与一致性）</h4>
+<p>用 Redis 记录 <code>SETNX idem:&#123;message_id&#125; 1 EX 7d</code>：</p>
+<ul>
+<li>存在 =&gt; 已处理，直接 ack</li>
+<li>不存在 =&gt; 处理后写入</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ul>
+<li>Redis 幂等适合 “短期去重 / 削峰”，但不如 MySQL 去重 “可追溯”</li>
+<li>若 Redis 丢数据或过期，可能发生重复副作用，所以<strong>不可逆操作仍建议 MySQL 唯一约束兜底</strong></li>
+</ul>
+<h4 id="7-3-幂等实现方式-C：业务状态机-条件更新">7.3 幂等实现方式 C：业务状态机 + 条件更新</h4>
+<p>例如订单履约：</p>
+<ul>
+<li>只有 <code>PAID</code> 才能进入 <code>SHIPPED</code></li>
+<li>更新用条件限制：<code>UPDATE ... WHERE status='PAID'</code></li>
+<li>影响行数为 0 说明重复 / 非法推进 -&gt; 直接忽略</li>
+</ul>
+<h3 id="8-Kafka-重试-DLQ（死信）怎么设计？">8. Kafka 重试 / DLQ（死信）怎么设计？</h3>
+<p>Kafka 自身不提供 “像 RabbitMQ 那样原生延迟队列” 功能（可通过多 Topic + 定时转发实现），常见方案：</p>
+<h4 id="8-1-多级重试-Topic（推荐）">8.1 多级重试 Topic（推荐）</h4>
+<ul>
+<li><code>payment.events</code>（主 topic）</li>
+<li><code>payment.events.retry.1m</code></li>
+<li><code>payment.events.retry.10m</code></li>
+<li><code>payment.events.dlq</code></li>
+</ul>
+<p>消费者失败后把消息投到对应 retry topic，并在 payload/headers 里记录 <code>retry_count</code>、<code>next_retry</code> 等。<br>
+各 retry topic 的消费者可以用 “延迟处理器”（例如：消费后 sleep 到时间点，或用定时器轮询）——更推荐用<strong>定时任务 / 延迟服务</strong>做转发，避免消费线程阻塞。</p>
+<h4 id="8-2-DLQ-处理要求">8.2 DLQ 处理要求</h4>
+<ul>
+<li>DLQ 必须告警（飞书 / 钉钉 / 邮件）</li>
+<li>提供人工重放工具（按 message_id 重投）</li>
+<li>保留必要上下文：原 topic、partition、offset、异常堆栈、trace_id</li>
+</ul>
+<h3 id="9-Kafka-场景升级：CDC（Debezium）自动投递-Outbox">9. Kafka 场景升级：CDC（Debezium）自动投递 Outbox</h3>
+<p>如果团队重度使用 Kafka，可以让业务只写 MySQL：</p>
+<ul>
+<li>订单表 + outbox 表</li>
+<li>Debezium 订阅 binlog，把 outbox 的 INSERT/UPDATE 变成 Kafka 事件</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>投递链路更稳（减少自研投递器代码）</li>
+<li>可观测性强（binlog → Kafka）</li>
+<li>与多语言服务更解耦</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>运维复杂度提高（部署 / 维护 CDC 组件）</li>
+<li>Schema 演进、topic 管理更需要规范化</li>
+</ul>
+<h3 id="10-支付业务建议：状态机-Outbox-（可选）Saga-补偿">10. 支付业务建议：状态机 + Outbox +（可选）Saga / 补偿</h3>
+<p>支付通常分两层：</p>
+<ol>
+<li><strong>资金结果层</strong>（渠道回调 / 查单确认）</li>
+<li><strong>业务履约层</strong>（发货、发券、记账、积分）</li>
+</ol>
+<p>资金成功后一般不做 “回滚资金”，而是走补偿链路（退款 / 冲正 / 撤销履约）。</p>
+<h4 id="10-1-什么时候需要-Saga？">10.1 什么时候需要 Saga？</h4>
+<p>当一个业务流程跨多个服务且步骤多、失败概率高，需要补偿：</p>
+<ul>
+<li>扣库存失败 -&gt; 释放优惠券</li>
+<li>发券失败 -&gt; 回滚订单履约状态</li>
+<li>记账失败 -&gt; 进入人工修复队列</li>
+</ul>
+<p>Saga 核心是：</p>
+<ul>
+<li>每一步都是本地事务 + 事件</li>
+<li>失败触发补偿事件（反向操作）</li>
+<li>最终一致</li>
+</ul>
+<h3 id="11-一句话总结（可直接落地）">11. 一句话总结（可直接落地）</h3>
+<ul>
+<li>不要在 MySQL 事务里直接发 Kafka</li>
+<li>用 <strong>Transactional Outbox</strong> 把 “业务写库” 和“消息可重放”绑定在同一事务</li>
+<li>Kafka 投递采用 <strong>至少一次</strong>，消费者必须 <strong>幂等</strong></li>
+<li>顺序性：消息 <code>key=order_id</code>，同订单事件按分区内顺序处理</li>
+<li>失败处理：重试 topic + DLQ + 告警 + 可重放</li>
+<li>Kafka 可用 <strong>CDC（Debezium）</strong> 把 outbox 自动流化</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Vic</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vagrantpoet.site/2023/10/11/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%BE%AE%E6%9C%8D%E5%8A%A1%20:%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8B%EF%BC%9AMySQL%20%E4%BA%8B%E5%8A%A1%E4%B8%8E%20Kafka%20%E4%B8%80%E8%87%B4%E6%80%A7%E6%80%8E%E4%B9%88%E5%81%9A/">https://vagrantpoet.site/2023/10/11/分布式/微服务 : 分布式下：MySQL 事务与 Kafka 一致性怎么做/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://vagrantpoet.site" target="_blank">Vic 日常笔记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7/">一致性</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/31/%E5%88%86%E5%B8%83%E5%BC%8F/Apollo%20%E8%AF%A6%E8%A7%A3/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Apollo 详解</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/19/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%AF%A6%E8%A7%A3/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">分布式事务解决方案详解</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/LVicBlack/IMG/root/20210907231006.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Vic</div><div class="author-info__description">专注当下，向内探索。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">104</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">44</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">邮箱 - vicliu014@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8B%EF%BC%9AMySQL-%E4%BA%8B%E5%8A%A1%E4%B8%8E-Kafka-%E4%B8%80%E8%87%B4%E6%80%A7%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">微服务 &#x2F; 分布式下：MySQL 事务与 Kafka 一致性怎么做？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-%E2%80%9C%E4%BA%8B%E5%8A%A1%E9%87%8C%E7%9B%B4%E6%8E%A5%E5%8F%91-Kafka%E2%80%9D-%E4%BC%9A%E5%87%BA%E4%BA%8B%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 为什么 “事务里直接发 Kafka” 会出事？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99%EF%BC%9A%E5%85%88%E4%BF%9D%E8%AF%81-%E2%80%9C%E8%90%BD%E5%BA%93-%E5%8F%AF%E8%BF%BD%E6%BA%AF%E2%80%9D%EF%BC%8C%E5%86%8D%E5%BC%82%E6%AD%A5%E6%8A%95%E9%80%92"><span class="toc-number">1.2.</span> <span class="toc-text">2. 核心原则：先保证 “落库 + 可追溯”，再异步投递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9C%80%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88%EF%BC%9ATransactional-Outbox%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%B6%88%E6%81%AF%E8%A1%A8%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3. 最推荐方案：Transactional Outbox（本地消息表）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E6%96%B9%E6%A1%88%E6%8F%8F%E8%BF%B0%EF%BC%88%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90%EF%BC%8C%E6%94%AF%E4%BB%98-%E8%AE%A2%E5%8D%95%E9%80%9A%E7%94%A8%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 方案描述（强烈推荐，支付 &#x2F; 订单通用）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E4%B8%BA%E4%BB%80%E4%B9%88-Outbox-%E8%83%BD%E8%A7%A3%E5%86%B3-%E2%80%9CKafka-%E5%8F%91%E4%BA%86%E4%BD%86%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A%E2%80%9D%EF%BC%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 为什么 Outbox 能解决 “Kafka 发了但事务回滚”？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Outbox-%E8%A1%A8%E8%AE%BE%E8%AE%A1%E5%BB%BA%E8%AE%AE%EF%BC%88MySQL-%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">4. Outbox 表设计建议（MySQL 示例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Kafka-%E4%BE%A7%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%BB%BA%E8%AE%AE%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">5. Kafka 侧的工程化建议（非常重要）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-Topic-%E5%88%86%E5%8C%BA-%E9%A1%BA%E5%BA%8F%E6%80%A7"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 Topic &#x2F; 分区 &#x2F; 顺序性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-Producer%EF%BC%88Go%EF%BC%89%E5%BB%BA%E8%AE%AE%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 Producer（Go）建议配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-Consumer%EF%BC%88Go%EF%BC%89%E5%BB%BA%E8%AE%AE%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%8F%90%E4%BA%A4%E6%97%B6%E6%9C%BA"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3 Consumer（Go）建议配置与提交时机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%8A%95%E9%80%92%E5%99%A8%EF%BC%88Outbox-Dispatcher%EF%BC%89%E5%9C%A8-Go-%E4%B8%AD%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F"><span class="toc-number">1.6.</span> <span class="toc-text">6. 投递器（Outbox Dispatcher）在 Go 中怎么做？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E6%8A%95%E9%80%92%E6%B5%81%E7%A8%8B"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 投递流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E5%A4%9A%E5%AE%9E%E4%BE%8B%E5%B9%B6%E5%8F%91%E6%8A%A2%E5%8D%A0%EF%BC%88MySQL-8-%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 多实例并发抢占（MySQL 8 推荐）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E5%8F%91%E9%80%81%E5%88%B0-Kafka-%E6%88%90%E5%8A%9F%E5%90%8E%E6%9B%B4%E6%96%B0%E7%8A%B6%E6%80%81"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 发送到 Kafka 成功后更新状态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%B6%88%E8%B4%B9%E7%AB%AF%E5%BF%85%E9%A1%BB%E5%B9%82%E7%AD%89%EF%BC%88Kafka-%E8%87%B3%E5%B0%91%E4%B8%80%E6%AC%A1%E6%8A%95%E9%80%92%E7%9A%84%E4%BB%A3%E4%BB%B7%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">7. 消费端必须幂等（Kafka 至少一次投递的代价）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E5%B9%82%E7%AD%89%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F-A%EF%BC%9AMySQL-%E5%8E%BB%E9%87%8D%E8%A1%A8%EF%BC%88%E6%9C%80%E5%8F%AF%E9%9D%A0%EF%BC%89"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 幂等实现方式 A：MySQL 去重表（最可靠）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E5%B9%82%E7%AD%89%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F-B%EF%BC%9ARedis-%E5%B9%82%E7%AD%89%EF%BC%88%E6%9B%B4%E5%BF%AB%EF%BC%8C%E4%BD%86%E8%A6%81%E5%A4%84%E7%90%86%E8%BF%87%E6%9C%9F%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">7.2 幂等实现方式 B：Redis 幂等（更快，但要处理过期与一致性）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-%E5%B9%82%E7%AD%89%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F-C%EF%BC%9A%E4%B8%9A%E5%8A%A1%E7%8A%B6%E6%80%81%E6%9C%BA-%E6%9D%A1%E4%BB%B6%E6%9B%B4%E6%96%B0"><span class="toc-number">1.7.3.</span> <span class="toc-text">7.3 幂等实现方式 C：业务状态机 + 条件更新</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-Kafka-%E9%87%8D%E8%AF%95-DLQ%EF%BC%88%E6%AD%BB%E4%BF%A1%EF%BC%89%E6%80%8E%E4%B9%88%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="toc-number">1.8.</span> <span class="toc-text">8. Kafka 重试 &#x2F; DLQ（死信）怎么设计？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-%E5%A4%9A%E7%BA%A7%E9%87%8D%E8%AF%95-Topic%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.8.1.</span> <span class="toc-text">8.1 多级重试 Topic（推荐）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-DLQ-%E5%A4%84%E7%90%86%E8%A6%81%E6%B1%82"><span class="toc-number">1.8.2.</span> <span class="toc-text">8.2 DLQ 处理要求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-Kafka-%E5%9C%BA%E6%99%AF%E5%8D%87%E7%BA%A7%EF%BC%9ACDC%EF%BC%88Debezium%EF%BC%89%E8%87%AA%E5%8A%A8%E6%8A%95%E9%80%92-Outbox"><span class="toc-number">1.9.</span> <span class="toc-text">9. Kafka 场景升级：CDC（Debezium）自动投递 Outbox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E6%94%AF%E4%BB%98%E4%B8%9A%E5%8A%A1%E5%BB%BA%E8%AE%AE%EF%BC%9A%E7%8A%B6%E6%80%81%E6%9C%BA-Outbox-%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89Saga-%E8%A1%A5%E5%81%BF"><span class="toc-number">1.10.</span> <span class="toc-text">10. 支付业务建议：状态机 + Outbox +（可选）Saga &#x2F; 补偿</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81-Saga%EF%BC%9F"><span class="toc-number">1.10.1.</span> <span class="toc-text">10.1 什么时候需要 Saga？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93%EF%BC%88%E5%8F%AF%E7%9B%B4%E6%8E%A5%E8%90%BD%E5%9C%B0%EF%BC%89"><span class="toc-number">1.11.</span> <span class="toc-text">11. 一句话总结（可直接落地）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/06/20/AI/Loop%20Engineering/" title="Loop Engineering"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Loop Engineering"/></a><div class="content"><a class="title" href="/2026/06/20/AI/Loop%20Engineering/" title="Loop Engineering">Loop Engineering</a><time datetime="2026-06-20T02:06:00.000Z" title="发表于 2026-06-20 10:06:00">2026-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/01/AI/Agent/Agent%E8%AF%84%E4%BC%B0/" title="Agent评估"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Agent评估"/></a><div class="content"><a class="title" href="/2026/06/01/AI/Agent/Agent%E8%AF%84%E4%BC%B0/" title="Agent评估">Agent评估</a><time datetime="2026-06-01T12:06:00.000Z" title="发表于 2026-06-01 20:06:00">2026-06-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/05/AI/LLM/%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E6%AF%94%E5%92%8C%E9%80%89%E6%8B%A9/" title="不同模型的对比和选择"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="不同模型的对比和选择"/></a><div class="content"><a class="title" href="/2026/05/05/AI/LLM/%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E6%AF%94%E5%92%8C%E9%80%89%E6%8B%A9/" title="不同模型的对比和选择">不同模型的对比和选择</a><time datetime="2026-05-05T12:06:00.000Z" title="发表于 2026-05-05 20:06:00">2026-05-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/01/AI/Harness%20Engineering/" title="Harness Engineering"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Harness Engineering"/></a><div class="content"><a class="title" href="/2026/05/01/AI/Harness%20Engineering/" title="Harness Engineering">Harness Engineering</a><time datetime="2026-05-01T04:06:00.000Z" title="发表于 2026-05-01 12:06:00">2026-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/22/AI/Agent/Multi-Agent%20%E6%9E%B6%E6%9E%84/" title="Multi-Agent 架构"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Multi-Agent 架构"/></a><div class="content"><a class="title" href="/2026/04/22/AI/Agent/Multi-Agent%20%E6%9E%B6%E6%9E%84/" title="Multi-Agent 架构">Multi-Agent 架构</a><time datetime="2026-04-22T12:06:00.000Z" title="发表于 2026-04-22 20:06:00">2026-04-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Vic</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
